@@ -49,7 +49,18 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   private static final float Z_NEAR = 0.1f;
   private static final float Z_FAR = 100.0f;
 
-  private static final float CAMERA_Z = 0.01f;
+  private static float CAMERA_X = 0.0f;
+  private static float CAMERA_Y = 0.5f;
+  private static float CAMERA_Z = 0.01f;
+
+  private static float Z_info = 0.01f;
+
+
+  private float HeadPointX = 0.0f;
+  private float HeadPointY = 0.0f;
+  private float HeadPointZ = 0.0f;
+
+
   private static final float TIME_DELTA = 0.3f;
 
   private static final float YAW_LIMIT = 0.12f;
@@ -104,7 +115,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
   private Vibrator vibrator;
   private CardboardOverlayView overlayView;
-
+  private float PositiveCatchObjectEye_X,PositiveCatchObjectEye_Z,NegativeCatchObjectEye_X,NegativeCatchObjectEye_Z;
   /**
    * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
    *
@@ -336,9 +347,38 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   public void onNewFrame(HeadTransform headTransform) {
     // Build the Model part of the ModelView matrix.
     Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);
+    HeadPointX = headView[8] / 10;
+    HeadPointZ = headView[10] / 10;
 
+    float Wall_Z = 150.0f;
+    float Wall_X = 150.0f;
+
+    boolean PositiveObjectInView_X = CAMERA_X < modelCube[12] && modelCube[12] < PositiveCatchObjectEye_X;
+    boolean NegativeObjectInView_X = NegativeCatchObjectEye_X < modelCube[12] && modelCube[12] < CAMERA_X;
+    boolean PositiveObjectInView_Z = CAMERA_Z < modelCube[14] && modelCube[14] < PositiveCatchObjectEye_Z;
+    boolean NegativeObjectInView_Z = NegativeCatchObjectEye_Z < modelCube[14] && modelCube[14] < CAMERA_Z;
+    boolean PositiveWall_Z = CAMERA_Z < Wall_Z && Wall_Z < PositiveCatchObjectEye_Z;
+    boolean NegativeWall_Z = NegativeCatchObjectEye_Z < -Wall_Z && -Wall_Z < CAMERA_Z;
+    boolean PositiveWall_X =  CAMERA_X < Wall_X  && Wall_X < PositiveCatchObjectEye_X;
+    boolean NegativeWall_X =  NegativeCatchObjectEye_X < -Wall_X  && -Wall_X < CAMERA_X;
+    boolean culcX = (HeadPointX < 0) ? PositiveObjectInView_X : NegativeObjectInView_X;
+    boolean culcZ = (HeadPointZ > 0) ? PositiveObjectInView_Z : NegativeObjectInView_Z;
+    boolean BumpWallZ = (HeadPointZ > 0) ? PositiveWall_Z : NegativeWall_Z;
+    boolean BumpWallX = (HeadPointX < 0) ? PositiveWall_X : NegativeWall_X;
+
+    if ((culcZ && culcX) || (BumpWallX || BumpWallZ)){
+      CAMERA_Z = Z_info;
+      CAMERA_X = CAMERA_X;
+    }
+    else {
+      CAMERA_Y = -floorDepth + 5.0f;
+      CAMERA_X = CAMERA_X - HeadPointX;
+      CAMERA_Z = Z_info + HeadPointZ;
+      Z_info = Z_info + HeadPointZ;
+    }
     // Build the camera matrix and apply it to the ModelView.
-    Matrix.setLookAtM(camera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    Matrix.setLookAtM(camera, 0, CAMERA_X, CAMERA_Y, CAMERA_Z, 0.0f, 0.0f, 200.0f, 0.0f, 1.0f, 0.0f);
+    //CAMERA_X,CAMERA_Y,CAMERA_Z‚ð“n‚·I
 
     headTransform.getHeadView(headView, 0);
 
