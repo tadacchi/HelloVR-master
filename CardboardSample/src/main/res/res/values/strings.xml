@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">OpeningActionSample</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_observer">ObserverActivity</string>
+</resources>
