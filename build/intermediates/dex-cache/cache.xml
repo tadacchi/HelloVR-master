@@ -2,32 +2,32 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\tokue\Documents\AndroidStudioProjects\cardboard-java-master\CardboardSample\libs\libprotobuf-java-2.6-nano.jar"
+        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\libprotobuf-java-2.6-nano.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="2ba3ce68542db5a4b672a22606e4fd4631ed5c4f">
-        <dex dex="C:\Users\tokue\Documents\AndroidStudioProjects\cardboard-java-master\CardboardSample\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-01076e471b090be41f131d7e67a7910c54d7aeab.jar" />
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-5bb44b0346c4df1515c384dbcfbc1cee5fb26e74.jar" />
     </item>
     <item
-        jar="C:\Users\tokue\Documents\AndroidStudioProjects\cardboard-java-master\CardboardSample\libs\cardboard.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="c3f82b1a4517f1d62a014512b9b3fd06af2987e8">
-        <dex dex="C:\Users\tokue\Documents\AndroidStudioProjects\cardboard-java-master\CardboardSample\build\intermediates\pre-dexed\debug\cardboard-0561e21e095a67722fb657f311b6660de44c2c7e.jar" />
-    </item>
-    <item
-        jar="C:\Users\tokue\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
-        <dex dex="C:\Users\tokue\Documents\AndroidStudioProjects\cardboard-java-master\CardboardSample\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-80b65ab8da17b02d291c803762a0111b31600c50.jar" />
-    </item>
-    <item
-        jar="C:\Users\tokue\Documents\AndroidStudioProjects\cardboard-java-master\CardboardSample\build\intermediates\exploded-aar\com.beardedhen\androidbootstrap\2.0.1\jars\classes.jar"
+        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\exploded-aar\com.beardedhen\androidbootstrap\2.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="14d494487b6ab2e3740527221055a99f50b0a697">
-        <dex dex="C:\Users\tokue\Documents\AndroidStudioProjects\cardboard-java-master\CardboardSample\build\intermediates\pre-dexed\debug\classes-e1af309a4c5b1946d0c8c94e6c49d7f149cb5b5d.jar" />
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master-master\CardboardSample\build\intermediates\pre-dexed\debug\classes-89d42044aca4183cc6b4bcd8aacb3a52ce2725bd.jar" />
+    </item>
+    <item
+        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\cardboard.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="c3f82b1a4517f1d62a014512b9b3fd06af2987e8">
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\cardboard-e9d72eeaa45f8ad9a04a8ac8d9da23e0b84a9b01.jar" />
+    </item>
+    <item
+        jar="C:\Users\2015295\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-d0299d70e97b8873055315b2aa4ce670bfbfb7d8.jar" />
     </item>
 
 </items>
