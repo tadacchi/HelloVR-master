@@ -39,6 +39,9 @@ import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
+import jp.co.altec.openingactionsample.DeviceInfo;
+import jp.co.altec.openingactionsample.Point;
+
 /**
  * A Cardboard sample application.
  */
@@ -112,9 +115,12 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   private int score = 0;
   private float objectDistance = 12f;
   private float floorDepth = 20f;
-
+  private String name,ipAddress;
+  private Point point = new Point("-1","-1","-1");
+  private DeviceInfo deviceInfo = new DeviceInfo(name,ipAddress, point);
   private Vibrator vibrator;
   private CardboardOverlayView overlayView;
+
   private float PositiveCatchObjectEye_X,PositiveCatchObjectEye_Z,NegativeCatchObjectEye_X,NegativeCatchObjectEye_Z;
   /**
    * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
@@ -181,6 +187,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     modelView = new float[16];
     modelFloor = new float[16];
     headView = new float[16];
+
     vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 
@@ -378,8 +385,13 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     }
     // Build the camera matrix and apply it to the ModelView.
     Matrix.setLookAtM(camera, 0, CAMERA_X, CAMERA_Y, CAMERA_Z, 0.0f, 0.0f, 200.0f, 0.0f, 1.0f, 0.0f);
-    //CAMERA_X,CAMERA_Y,CAMERA_ZÇìnÇ∑ÅI
-
+    //CAMERA_X,CAMERA_Y,CAMERA_Z
+    String x = String.valueOf(CAMERA_X);
+    String y = String.valueOf(CAMERA_Y);
+    String z = String.valueOf(CAMERA_Z);
+    System.out.println("x = "+x +" y = "+ y + " z = "+z );
+    Point point = new Point(x , y , z);
+    deviceInfo.setPoint(point);
     headTransform.getHeadView(headView, 0);
 
     checkGLError("onReadyToDraw");

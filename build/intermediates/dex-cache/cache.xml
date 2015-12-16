@@ -2,13 +2,6 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\libprotobuf-java-2.6-nano.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="2ba3ce68542db5a4b672a22606e4fd4631ed5c4f">
-        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-5bb44b0346c4df1515c384dbcfbc1cee5fb26e74.jar" />
-    </item>
-    <item
         jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\exploded-aar\com.beardedhen\androidbootstrap\2.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
@@ -20,7 +13,7 @@
         jumboMode="false"
         revision="23.0.0"
         sha1="c3f82b1a4517f1d62a014512b9b3fd06af2987e8">
-        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\cardboard-e9d72eeaa45f8ad9a04a8ac8d9da23e0b84a9b01.jar" />
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\cardboard-7ccad2beadd7506101c195791dc0947b017723dc.jar" />
     </item>
     <item
         jar="C:\Users\2015295\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
@@ -28,6 +21,13 @@
         revision="23.0.0"
         sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
         <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-d0299d70e97b8873055315b2aa4ce670bfbfb7d8.jar" />
+    </item>
+    <item
+        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\libprotobuf-java-2.6-nano.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="2ba3ce68542db5a4b672a22606e4fd4631ed5c4f">
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-d38c8313c14efe04099668e48b265966020c8a41.jar" />
     </item>
 
 </items>
