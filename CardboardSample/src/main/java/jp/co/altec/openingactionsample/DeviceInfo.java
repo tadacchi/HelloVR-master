@@ -6,7 +6,7 @@ package jp.co.altec.openingactionsample;
 public class DeviceInfo {
     private String mName = "none";
     private String mIpAddress = "0.0.0";
-    private Point mPoint = new Point("0", "0", "0");
+    private Point mPoint = new Point("-1", "-1", "-1");
 
     public DeviceInfo(String name, String ipAddress, Point point) {
         mName = name;

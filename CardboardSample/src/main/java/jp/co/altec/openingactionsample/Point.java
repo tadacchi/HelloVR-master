@@ -12,7 +12,7 @@ public final class Point {
         this.z = "-1";
     }
 
-    public Point( String x, String y, String z) {
+    public Point(final String x, final String y, final String z) {
         this.x = x;
         this.y = y;
         this.z = z;
