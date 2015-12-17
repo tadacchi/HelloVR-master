@@ -18,7 +18,10 @@ public class DeviceInfo {
 
     public Point getPoint() { return mPoint; }
 
-    public void setPoint(Point point) { this.mPoint = point; }
+    public void setPoint(Point point) {
+        this.mPoint = point;
+        System.out.println("DevicePoint"+ point);
+    }
 
     public String getIpAddress() { return mIpAddress; }
 
@@ -27,11 +30,13 @@ public class DeviceInfo {
     public void setName(String name) { this.mName = name; }
 
     public String Format() {
+        System.out.println("Format = x = " + mPoint.x + "y = " + mPoint.y + "z = " + mPoint.z);
         return mName + ":" + mIpAddress + ":" + mPoint.x + ":" +  mPoint.y + ":" +  mPoint.z;
     }
 
     public static DeviceInfo parse(String in) {
         String[] data = in.split(":");
+        System.out.println("DeviceInfo!! = " + in);
         return new DeviceInfo(data[0],data[1],new Point(data[2],data[3],data[4]));
     }
 

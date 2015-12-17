@@ -21,7 +21,9 @@ public class SettingsActivity extends Activity {
         public void run() {
             if (udp == null) return;
             if (count/4 > 0) {
-                udp.mDeviceInfo.setPoint(new Point(String.valueOf(count), "0", String.valueOf(++count)));
+ //               udp.mDeviceInfo.setPoint(new Point(String.valueOf(count), "0", String.valueOf(++count)));
+                  udp.mDeviceInfo.setPoint(udp.mDeviceInfo.getPoint());
+                  System.out.println("UDP_POINT = "+ udp.mDeviceInfo.getPoint());
             }
             udp.sendBroadcast();
             mHandler.postDelayed(mRunnable,300);

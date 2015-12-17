@@ -80,6 +80,8 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     System.out.println(e.getKey() + " : " + e.getValue());
                     cx = (int) (mScreen_width/2 + Float.valueOf(e.getValue().getPoint().x));
                     cy = (int) (mScreen_height/2 + Float.valueOf(e.getValue().getPoint().z));
+                    System.out.println("GetPoint!! x = " + Float.valueOf(e.getValue().getPoint().x) + "y = " + Float.valueOf(e.getValue().getPoint().z));
+                    System.out.println("Observe! x = " + cx + "y = " + cy);
                     canvas.drawCircle(cx, cy, BALL_R, paint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
                 }
