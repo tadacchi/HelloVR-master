@@ -13,12 +13,13 @@ public final class Point {
         System.out.println("Point = " + x + "y = " + y );
     }
 
-    public Point(final String x, final String y, final String z) {
+    public Point(String x, String y, String z) {
         this.x = x;
         this.y = y;
         this.z = z;
         System.out.println("Point(x,y,z) = " + x + "y = " + y +"z = " + z );
     }
+
 
     @Override
     public String toString() {

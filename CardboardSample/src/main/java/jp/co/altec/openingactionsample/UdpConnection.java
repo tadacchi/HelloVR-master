@@ -5,6 +5,8 @@ import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.NetWorkMgr;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -20,16 +22,16 @@ public class UdpConnection {
     private WifiManager mWifiManager;
     private String mMyIpAddress;
     DeviceInfo mDeviceInfo;
+    NetWorkMgr mNetWorkMgr = NetWorkMgr.getInstance();
     private DatagramSocket mUdpSocket;
     private final int UDP_PORT = 10000;
     private boolean close = false;
 //    private HashMap<String, DeviceInfo> mDeviceInfos = new HashMap<>();
 
     public UdpConnection(Context context, String name) {
-        mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        //mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         mContext = context;
-
-        mDeviceInfo = new DeviceInfo(name, getMyIpAddress(),new Point());
+        //mDeviceInfo = new DeviceInfo(name, getMyIpAddress(),new Point());
     }
 
     /**
@@ -61,7 +63,8 @@ public class UdpConnection {
                         receiveData = new String(buf, 0, length);
 
                         // 送信元情報の取得
-                        DeviceInfo info = DeviceInfo.parse(receiveData);
+                        mNetWorkMgr.setOtherPoint(receiveData);
+                        /*DeviceInfo info = DeviceInfo.parse(receiveData);
                         if (!info.getIpAddress().equals(getMyIpAddress())) {
                             DataControl.mDeviceInfos.put(info.getIpAddress(), info);
                         } else {
@@ -69,7 +72,7 @@ public class UdpConnection {
                             DataControl.mDeviceInfos.put(info.getIpAddress(), info);
                             Log.d(TAG, "my device info receive :: " + info);
                         }
-
+*/
                         Log.d(TAG, "receive socketAddress is " + packet.getSocketAddress().toString() + " packet data : " + receiveData);
                     }
                     mUdpSocket.close();
@@ -87,15 +90,15 @@ public class UdpConnection {
      * 自分のIPアドレスを取得する。
      * @return IPアドレス
      */
-    String getMyIpAddress(){
+    public String getMyIpAddress(){
         int ipAddress_int = 0;
 
-        if (mWifiManager.getConnectionInfo() != null) {
-            ipAddress_int = mWifiManager.getConnectionInfo().getIpAddress();
+        //if (mWifiManager.getConnectionInfo() != null) {
+        //    ipAddress_int = mWifiManager.getConnectionInfo().getIpAddress();
             mMyIpAddress = (ipAddress_int & 0xFF) + "." + (ipAddress_int >> 8 & 0xFF) + "." + (ipAddress_int >> 16 & 0xFF) + "." + (ipAddress_int >> 24 & 0xFF);
-        } else {
-            mMyIpAddress = null;
-        }
+        //} else {
+        //    mMyIpAddress = null;
+       // }
 
         Log.d(TAG, "my ipAddress is " + mMyIpAddress);
         return mMyIpAddress;
@@ -132,7 +135,7 @@ public class UdpConnection {
                         mUdpSocket = new DatagramSocket(UDP_PORT);
                     }
                     mUdpSocket.setBroadcast(true);
-                    String data = mDeviceInfo.Format();
+                    String data = mNetWorkMgr.sendMyPoint();
                     DatagramPacket packet = new DatagramPacket(data.getBytes(), data.getBytes().length, getBroadcastAddress(), UDP_PORT);
                     mUdpSocket.send(packet);
                 } catch (SocketException e) {

@@ -116,8 +116,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   private float objectDistance = 12f;
   private float floorDepth = 20f;
   private String name,ipAddress;
-  private Point point = new Point("-1","-1","-1");
-  private DeviceInfo deviceInfo = new DeviceInfo(name,ipAddress, point);
+  NetWorkMgr mNetWorkMgr = NetWorkMgr.getInstance();
   private Vibrator vibrator;
   private CardboardOverlayView overlayView;
 
@@ -153,12 +152,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     return shader;
   }
 
-  public DeviceInfo getDeviceInfo(){
-    return deviceInfo;
-  }
-  public void setDeviceInfo(DeviceInfo deviceInfo){
-    this.deviceInfo = deviceInfo;
-  }
+
   /**
    * Checks if we've had an error inside of OpenGL ES, and if so what that error is.
    *
@@ -395,9 +389,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     String x = String.valueOf(CAMERA_X);
     String y = String.valueOf(CAMERA_Y);
     String z = String.valueOf(CAMERA_Z);
-    System.out.println("Main!! x = "+ x +" y = "+ y + " z = "+z );
-    Point point = new Point(x , y , z);
-    deviceInfo.setPoint(point);
+    System.out.println("Main!! x = " + x + " y = " + y + " z = " + z);
+    mNetWorkMgr.setMyPoint(x,y,z);
     headTransform.getHeadView(headView, 0);
 
     checkGLError("onReadyToDraw");

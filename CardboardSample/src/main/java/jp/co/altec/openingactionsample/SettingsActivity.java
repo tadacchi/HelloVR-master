@@ -10,26 +10,29 @@ import android.widget.Switch;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.NetWorkMgr;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 public class SettingsActivity extends Activity {
-    UdpConnection udp;
-    int count = 0;
     Handler mHandler = new Handler();
+/*    UdpConnection udp;
+    NetWorkMgr mNetWorkMgr = NetWorkMgr.getInstance();
+    int count = 0;
+
     Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             if (udp == null) return;
             if (count/4 > 0) {
  //               udp.mDeviceInfo.setPoint(new Point(String.valueOf(count), "0", String.valueOf(++count)));
-                  udp.mDeviceInfo.setPoint(udp.mDeviceInfo.getPoint());
+                  mNetWorkMgr.setMyPoint(mNetWorkMgr.getmPoint());
                   System.out.println("UDP_POINT = "+ udp.mDeviceInfo.getPoint());
             }
             udp.sendBroadcast();
             mHandler.postDelayed(mRunnable,300);
             count++;
         }
-    };
+    };*/
 
     Switch mObserverBtn;
 
@@ -44,15 +47,15 @@ public class SettingsActivity extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (udp != null) {
+                /*if (udp != null) {
                     udp.stopReceiver();
                     udp = null;
                 }
-                udp = new UdpConnection(getApplicationContext(), ((BootstrapEditText)findViewById(R.id.editText)).getText().toString());
+                mNetWorkMgr.mUdpConnection(getApplicationContext(), ((BootstrapEditText)findViewById(R.id.editText)).getText().toString());
                 udp.receiveBroadcast();
 
-                Log.d("DEBUG", "/// DATA CONNECTION ///");
-                mHandler.postDelayed(mRunnable, 300);
+                Log.d("DEBUG", "/// DATA CONNECTION ///")*/;
+                //mHandler.postDelayed(mRunnable, 300);
 
                 if (mObserverBtn.isChecked()) {
                     Intent intent = new Intent(getApplicationContext(), ObserverActivity.class);
