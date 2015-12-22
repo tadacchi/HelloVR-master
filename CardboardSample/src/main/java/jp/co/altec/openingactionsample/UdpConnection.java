@@ -29,9 +29,10 @@ public class UdpConnection {
 //    private HashMap<String, DeviceInfo> mDeviceInfos = new HashMap<>();
 
     public UdpConnection(Context context, String name) {
-        //mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         mContext = context;
-        //mDeviceInfo = new DeviceInfo(name, getMyIpAddress(),new Point());
+        mNetWorkMgr.setDeviceInfo(name, getMyIpAddress(),mNetWorkMgr.getMyPoint());
+        mDeviceInfo = mNetWorkMgr.getDeviceInfo();
     }
 
     /**
@@ -63,8 +64,9 @@ public class UdpConnection {
                         receiveData = new String(buf, 0, length);
 
                         // 送信元情報の取得
-                        mNetWorkMgr.setOtherPoint(receiveData);
-                        /*DeviceInfo info = DeviceInfo.parse(receiveData);
+
+                        DeviceInfo info = mNetWorkMgr.parce(receiveData);
+                        //DeviceInfo info = DeviceInfo.parse(receiveData);
                         if (!info.getIpAddress().equals(getMyIpAddress())) {
                             DataControl.mDeviceInfos.put(info.getIpAddress(), info);
                         } else {
@@ -72,7 +74,7 @@ public class UdpConnection {
                             DataControl.mDeviceInfos.put(info.getIpAddress(), info);
                             Log.d(TAG, "my device info receive :: " + info);
                         }
-*/
+
                         Log.d(TAG, "receive socketAddress is " + packet.getSocketAddress().toString() + " packet data : " + receiveData);
                     }
                     mUdpSocket.close();
@@ -93,12 +95,12 @@ public class UdpConnection {
     public String getMyIpAddress(){
         int ipAddress_int = 0;
 
-        //if (mWifiManager.getConnectionInfo() != null) {
-        //    ipAddress_int = mWifiManager.getConnectionInfo().getIpAddress();
+        if (mWifiManager.getConnectionInfo() != null) {
+            ipAddress_int = mWifiManager.getConnectionInfo().getIpAddress();
             mMyIpAddress = (ipAddress_int & 0xFF) + "." + (ipAddress_int >> 8 & 0xFF) + "." + (ipAddress_int >> 16 & 0xFF) + "." + (ipAddress_int >> 24 & 0xFF);
-        //} else {
-        //    mMyIpAddress = null;
-       // }
+        } else {
+            mMyIpAddress = null;
+        }
 
         Log.d(TAG, "my ipAddress is " + mMyIpAddress);
         return mMyIpAddress;
@@ -135,7 +137,7 @@ public class UdpConnection {
                         mUdpSocket = new DatagramSocket(UDP_PORT);
                     }
                     mUdpSocket.setBroadcast(true);
-                    String data = mNetWorkMgr.sendMyPoint();
+                    String data = mNetWorkMgr.DeviceInfoFormat();
                     DatagramPacket packet = new DatagramPacket(data.getBytes(), data.getBytes().length, getBroadcastAddress(), UDP_PORT);
                     mUdpSocket.send(packet);
                 } catch (SocketException e) {

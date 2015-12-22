@@ -23,12 +23,12 @@ public class NetWorkMgr {
     private WifiManager mWifiManager;
     private String mMyIpAddress, mOtherIpAddress;
     private final String TAG = "UDP-CONN";
-    String name, x, y, z;
+    String name,ipAddress, x, y, z;
     Context mContext;
-    Point mPoint = new Point(x, y, z);
-    UdpConnection mUdpConnection = new UdpConnection(mContext, name);
-    DeviceInfo mDeviceInfo = new DeviceInfo(name, mUdpConnection.getMyIpAddress(), mPoint);
-
+    Point point = new Point(x, y, z);
+    private UdpConnection mUdpConnection;
+    private DeviceInfo mDeviceInfo;
+    private Point mPoint;
     private static NetWorkMgr instance = new NetWorkMgr();
 
     private NetWorkMgr() {}
@@ -39,25 +39,45 @@ public class NetWorkMgr {
 
     //Hash Map
     ConcurrentHashMap<String, String> mHashMap = new ConcurrentHashMap<String, String>();
-
-
-    //To MainActivity
     public void setMyPoint(String x, String y, String z) {
-        mDeviceInfo.setPoint(new Point(x, y, z));
+        mPoint = new Point(x,y,z);
     }
+
+    public void setDeviceInfo(String name, String ipAddress, Point point) {
+        mDeviceInfo = new DeviceInfo(name, ipAddress, point);
+    }
+    public DeviceInfo getDeviceInfo() {
+        return mDeviceInfo;
+    }
+    public String DeviceInfoFormat(){
+        return mDeviceInfo.Format();
+    }
+    public DeviceInfo parce(String in){
+        return mDeviceInfo.parse(in);
+    }
+
+    public Point getMyPoint(){
+        return mPoint;
+    }
+    public void setMyIpAddress(){
+
+    }
+
+        //To MainActivity
+    /*
 
     //To SettingActivity
     public void setMyPoint(Point myPoint) {
-        mDeviceInfo.setPoint(myPoint);
+        deviceInfo.setPoint(myPoint);
     }
 
     public Point getmPoint() {
-        return mDeviceInfo.getPoint();
+        return deviceInfo.getPoint();
     }
 
     //To UdpConnection
     public String sendMyPoint() {
-        return mDeviceInfo.Format();
+        return deviceInfo.Format();
     }
 
     public void setOtherPoint(String receiveData) {

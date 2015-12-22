@@ -17,7 +17,6 @@ public final class Point {
         this.x = x;
         this.y = y;
         this.z = z;
-        System.out.println("Point(x,y,z) = " + x + "y = " + y +"z = " + z );
     }
 
 

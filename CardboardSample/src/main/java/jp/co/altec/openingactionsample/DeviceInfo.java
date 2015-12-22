@@ -20,7 +20,6 @@ public class DeviceInfo {
 
     public void setPoint(Point point) {
         this.mPoint = point;
-        System.out.println("DevicePoint"+ point);
     }
 
     public String getIpAddress() { return mIpAddress; }
@@ -30,7 +29,6 @@ public class DeviceInfo {
     public void setName(String name) { this.mName = name; }
 
     public String Format() {
-        System.out.println("Format = x = " + mPoint.x + "y = " + mPoint.y + "z = " + mPoint.z);
         return mName + ":" + mIpAddress + ":" + mPoint.x + ":" +  mPoint.y + ":" +  mPoint.z;
     }
 
