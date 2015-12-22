@@ -390,7 +390,10 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     String y = String.valueOf(CAMERA_Y);
     String z = String.valueOf(CAMERA_Z);
     System.out.println("Main!! x = " + x + " y = " + y + " z = " + z);
-    mNetWorkMgr.setMyPoint(x,y,z);
+    DeviceInfo deviceInfo = mNetWorkMgr.getDeviceInfo();
+    if(deviceInfo != null){
+      deviceInfo.setPoint(new Point(x,y,z));
+    }
     headTransform.getHeadView(headView, 0);
 
     checkGLError("onReadyToDraw");
