@@ -433,6 +433,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
   @Override
   public void onFinishFrame(Viewport viewport) {
+    System.out.println("FinishFrame!!");
   }
 
   /**

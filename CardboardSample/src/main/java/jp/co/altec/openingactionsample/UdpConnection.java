@@ -12,6 +12,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.HashMap;
 
 /**
  * Created by tokue on 2015/11/28.
@@ -26,7 +27,7 @@ public class UdpConnection {
     private DatagramSocket mUdpSocket;
     private final int UDP_PORT = 10000;
     private boolean close = false;
-//    private HashMap<String, DeviceInfo> mDeviceInfos = new HashMap<>();
+    private HashMap<String, DeviceInfo> mDeviceInfos = new HashMap<>();
 
     public UdpConnection(Context context, String name) {
         mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);

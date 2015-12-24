@@ -20,13 +20,7 @@ import java.net.SocketException;
  * Created by 2015295 on 2015/12/21.
  */
 public class NetWorkMgr {
-    private WifiManager mWifiManager;
-    private String mMyIpAddress, mOtherIpAddress;
-    private final String TAG = "UDP-CONN";
     String name,ipAddress, x, y, z;
-    Context mContext;
-    Point point = new Point(x, y, z);
-    private UdpConnection mUdpConnection;
     private DeviceInfo mDeviceInfo;
     private Point mPoint;
     private static NetWorkMgr instance = new NetWorkMgr();
@@ -57,7 +51,12 @@ public class NetWorkMgr {
     }
 
     public Point getMyPoint(){
-        return mPoint;
+        if (mPoint == null){
+            return new Point("-1","-1","-1");
+        }
+        else{
+            return mPoint;
+        }
     }
     public void setMyIpAddress(){
 

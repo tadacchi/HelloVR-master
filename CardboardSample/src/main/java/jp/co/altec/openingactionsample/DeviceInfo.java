@@ -16,7 +16,9 @@ public class DeviceInfo {
 
     public String getName() { return mName; }
 
-    public Point getPoint() { return mPoint; }
+    public Point getPoint() {
+        return mPoint;
+    }
 
     public void setPoint(Point point) {
         this.mPoint = point;
@@ -34,7 +36,6 @@ public class DeviceInfo {
 
     public static DeviceInfo parse(String in) {
         String[] data = in.split(":");
-        System.out.println("DeviceInfo!! = " + in);
         return new DeviceInfo(data[0],data[1],new Point(data[2],data[3],data[4]));
     }
 

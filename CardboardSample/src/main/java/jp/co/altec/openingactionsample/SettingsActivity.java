@@ -20,9 +20,9 @@ public class SettingsActivity extends Activity {
         @Override
         public void run() {
             if (udp == null) return;
-            if (count/4 > 0) {
+            /*if (count/4 > 0) {
                 udp.mDeviceInfo.setPoint(new Point(String.valueOf(count), "0", String.valueOf(++count)));
-            }
+            }*/
             udp.sendBroadcast();
             mHandler.postDelayed(mRunnable,300);
             count++;
