@@ -27,7 +27,7 @@ public class UdpConnection {
     private DatagramSocket mUdpSocket;
     private final int UDP_PORT = 10000;
     private boolean close = false;
-    private HashMap<String, DeviceInfo> mDeviceInfos = new HashMap<>();
+//    private HashMap<String, DeviceInfo> mDeviceInfos = new HashMap<>();
 
     public UdpConnection(Context context, String name) {
         mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);

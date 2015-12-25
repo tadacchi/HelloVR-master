@@ -4,7 +4,9 @@ package jp.co.altec.openingactionsample;
  * Created by tokue on 2015/11/29.
  */
 public final class Point {
-    String x, y, z;
+    public String x, y, z;
+
+
 
     public  Point() {
         this.x = "-1";

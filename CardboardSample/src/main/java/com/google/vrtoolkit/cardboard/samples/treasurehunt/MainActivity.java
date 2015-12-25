@@ -36,9 +36,12 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
+import jp.co.altec.openingactionsample.DataControl;
 import jp.co.altec.openingactionsample.DeviceInfo;
 import jp.co.altec.openingactionsample.Point;
 
@@ -62,7 +65,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   private float HeadPointX = 0.0f;
   private float HeadPointY = 0.0f;
   private float HeadPointZ = 0.0f;
-
+  private float model_x,model_z;
 
   private static final float TIME_DELTA = 0.3f;
 
@@ -312,9 +315,13 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
     checkGLError("Floor program params");
 
+    /*CAMERA_X = (float) Math.random() * 100 + 30;
+    CAMERA_Z = (float) Math.random() * 100 + 30;
+    Z_info = CAMERA_Z;*/
+
     // Object first appears directly in front of user.
     Matrix.setIdentityM(modelCube, 0);
-    Matrix.translateM(modelCube, 0, 0, 0, -objectDistance);
+    Matrix.translateM(modelCube, 0, -15, -15, 0);
 
     Matrix.setIdentityM(modelFloor, 0);
     Matrix.translateM(modelFloor, 0, 0, -floorDepth, 0); // Floor appears below user.
@@ -420,9 +427,21 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     // Build the ModelView and ModelViewProjection matrices
     // for calculating cube position and light.
     float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
-    Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
-    Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-    drawCube();
+    //Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+    //Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+    int size = DataControl.mDeviceInfos.size();
+    for(Map.Entry<String, DeviceInfo> e : DataControl.mDeviceInfos.entrySet()){
+      int i =0;
+      model_x = Float.valueOf(e.getValue().getPoint().x);
+      model_z = Float.valueOf(e.getValue().getPoint().z);
+      
+      Cube cube = new Cube(model_x,-15,model_z);
+      modelCube = cube.getDrawCube();
+      Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+      Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+      drawCube();
+    }
+    //drawCube();
 
     // Set modelView for the floor, so we draw floor in the correct location
     Matrix.multiplyMM(modelView, 0, view, 0, modelFloor, 0);
@@ -433,7 +452,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
   @Override
   public void onFinishFrame(Viewport viewport) {
-    System.out.println("FinishFrame!!");
+
   }
 
   /**
@@ -462,7 +481,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     // Set the normal positions of the cube, again for shading
     GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);
     GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
-        isLookingAtObject() ? cubeFoundColors : cubeColors);
+        isTouchingAtObject() ? cubeFoundColors : cubeColors);
 
     GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
     checkGLError("Drawing cube");
@@ -483,9 +502,9 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     GLES20.glUniformMatrix4fv(floorModelParam, 1, false, modelFloor, 0);
     GLES20.glUniformMatrix4fv(floorModelViewParam, 1, false, modelView, 0);
     GLES20.glUniformMatrix4fv(floorModelViewProjectionParam, 1, false,
-        modelViewProjection, 0);
+            modelViewProjection, 0);
     GLES20.glVertexAttribPointer(floorPositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
-        false, 0, floorVertices);
+            false, 0, floorVertices);
     GLES20.glVertexAttribPointer(floorNormalParam, 3, GLES20.GL_FLOAT, false, 0,
         floorNormals);
     GLES20.glVertexAttribPointer(floorColorParam, 4, GLES20.GL_FLOAT, false, 0, floorColors);
@@ -502,7 +521,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   public void onCardboardTrigger() {
     Log.i(TAG, "onCardboardTrigger");
 
-    if (isLookingAtObject()) {
+    if (isTouchingAtObject()) {
       score++;
       overlayView.show3DToast("Found it! Look around for another one.\nScore = " + score);
       hideObject();
@@ -542,7 +561,16 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     Matrix.setIdentityM(modelCube, 0);
     Matrix.translateM(modelCube, 0, posVec[0], newY, posVec[2]);
   }
+  private boolean isTouchingAtObject() {
 
+    float[] initVec = { 0, 0, 0, 1.0f };
+    float[] objPositionVec = new float[4];
+    boolean CheckTouchX,CheckTouchZ,CheckTouch;
+    CheckTouchX = CAMERA_X-3.0f < modelCube[12] && modelCube[12]  < CAMERA_X+3.0f;
+    CheckTouchZ = CAMERA_Z-3.0f < modelCube[14] && modelCube[14]  < CAMERA_Z+3.0f;
+    CheckTouch = CheckTouchX&&CheckTouchZ;
+    return CheckTouch;
+  }
   /**
    * Check if user is looking at object by calculating where the object is in eye-space.
    *
