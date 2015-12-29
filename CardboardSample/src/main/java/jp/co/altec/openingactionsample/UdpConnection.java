@@ -72,7 +72,7 @@ public class UdpConnection {
                             DataControl.mDeviceInfos.put(info.getIpAddress(), info);
                         } else {
                             // test
-                            DataControl.mDeviceInfos.put(info.getIpAddress(), info);
+                            //DataControl.mDeviceInfos.put(info.getIpAddress(), info);
                             Log.d(TAG, "my device info receive :: " + info);
                         }
 

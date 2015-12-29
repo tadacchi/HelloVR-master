@@ -27,6 +27,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -44,6 +45,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import jp.co.altec.openingactionsample.DataControl;
 import jp.co.altec.openingactionsample.DeviceInfo;
 import jp.co.altec.openingactionsample.Point;
+import jp.co.altec.openingactionsample.UdpConnection;
 
 /**
  * A Cardboard sample application.
@@ -65,7 +67,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   private float HeadPointX = 0.0f;
   private float HeadPointY = 0.0f;
   private float HeadPointZ = 0.0f;
-  private float model_x,model_z;
+  private float model_x, model_z;
 
   private static final float TIME_DELTA = 0.3f;
 
@@ -75,7 +77,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   private static final int COORDS_PER_VERTEX = 3;
 
   // We keep the light always position just above the user.
-  private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] { 0.0f, 2.0f, 0.0f, 1.0f };
+  private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[]{0.0f, 2.0f, 0.0f, 1.0f};
 
   private final float[] lightPosInEyeSpace = new float[4];
 
@@ -118,16 +120,17 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
   private int score = 0;
   private float objectDistance = 12f;
   private float floorDepth = 20f;
-  private String name,ipAddress;
+  private String name, ipAddress;
   NetWorkMgr mNetWorkMgr = NetWorkMgr.getInstance();
   private Vibrator vibrator;
   private CardboardOverlayView overlayView;
 
-  private float PositiveCatchObjectEye_X,PositiveCatchObjectEye_Z,NegativeCatchObjectEye_X,NegativeCatchObjectEye_Z;
+  private float PositiveCatchObjectEye_X, PositiveCatchObjectEye_Z, NegativeCatchObjectEye_X, NegativeCatchObjectEye_Z;
+
   /**
    * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
    *
-   * @param type The type of shader we will be creating.
+   * @param type  The type of shader we will be creating.
    * @param resId The resource ID of the raw text file about to be turned into a shader.
    * @return The shader object handler.
    */
@@ -210,7 +213,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
   /**
    * Creates the buffers we use to store information about the 3D world.
-   *
+   * <p/>
    * <p>OpenGL doesn't use Java arrays, but rather needs data in a format it can understand.
    * Hence we use ByteBuffers.
    *
@@ -234,7 +237,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     cubeColors.position(0);
 
     ByteBuffer bbFoundColors = ByteBuffer.allocateDirect(
-        WorldLayoutData.CUBE_FOUND_COLORS.length * 4);
+            WorldLayoutData.CUBE_FOUND_COLORS.length * 4);
     bbFoundColors.order(ByteOrder.nativeOrder());
     cubeFoundColors = bbFoundColors.asFloatBuffer();
     cubeFoundColors.put(WorldLayoutData.CUBE_FOUND_COLORS);
@@ -373,18 +376,17 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     boolean NegativeObjectInView_Z = NegativeCatchObjectEye_Z < modelCube[14] && modelCube[14] < CAMERA_Z;
     boolean PositiveWall_Z = CAMERA_Z < Wall_Z && Wall_Z < PositiveCatchObjectEye_Z;
     boolean NegativeWall_Z = NegativeCatchObjectEye_Z < -Wall_Z && -Wall_Z < CAMERA_Z;
-    boolean PositiveWall_X =  CAMERA_X < Wall_X  && Wall_X < PositiveCatchObjectEye_X;
-    boolean NegativeWall_X =  NegativeCatchObjectEye_X < -Wall_X  && -Wall_X < CAMERA_X;
+    boolean PositiveWall_X = CAMERA_X < Wall_X && Wall_X < PositiveCatchObjectEye_X;
+    boolean NegativeWall_X = NegativeCatchObjectEye_X < -Wall_X && -Wall_X < CAMERA_X;
     boolean culcX = (HeadPointX < 0) ? PositiveObjectInView_X : NegativeObjectInView_X;
     boolean culcZ = (HeadPointZ > 0) ? PositiveObjectInView_Z : NegativeObjectInView_Z;
     boolean BumpWallZ = (HeadPointZ > 0) ? PositiveWall_Z : NegativeWall_Z;
     boolean BumpWallX = (HeadPointX < 0) ? PositiveWall_X : NegativeWall_X;
 
-    if ((culcZ && culcX) || (BumpWallX || BumpWallZ)){
+    if ((culcZ && culcX) || (BumpWallX || BumpWallZ)) {
       CAMERA_Z = Z_info;
       CAMERA_X = CAMERA_X;
-    }
-    else {
+    } else {
       CAMERA_Y = -floorDepth + 5.0f;
       CAMERA_X = CAMERA_X - HeadPointX;
       CAMERA_Z = Z_info + HeadPointZ;
@@ -398,8 +400,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     String z = String.valueOf(CAMERA_Z);
     System.out.println("Main!! x = " + x + " y = " + y + " z = " + z);
     DeviceInfo deviceInfo = mNetWorkMgr.getDeviceInfo();
-    if(deviceInfo != null){
-      deviceInfo.setPoint(new Point(x,y,z));
+    if (deviceInfo != null) {
+      deviceInfo.setPoint(new Point(x, y, z));
     }
     headTransform.getHeadView(headView, 0);
 
@@ -417,37 +419,38 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
     checkGLError("colorParam");
-
     // Apply the eye transformation to the camera.
     Matrix.multiplyMM(view, 0, eye.getEyeView(), 0, camera, 0);
-
     // Set the position of the light
     Matrix.multiplyMV(lightPosInEyeSpace, 0, view, 0, LIGHT_POS_IN_WORLD_SPACE, 0);
-
     // Build the ModelView and ModelViewProjection matrices
     // for calculating cube position and light.
     float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
-    //Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
-    //Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-    int size = DataControl.mDeviceInfos.size();
-    for(Map.Entry<String, DeviceInfo> e : DataControl.mDeviceInfos.entrySet()){
-      int i =0;
-      model_x = Float.valueOf(e.getValue().getPoint().x);
-      model_z = Float.valueOf(e.getValue().getPoint().z);
-      
-      Cube cube = new Cube(model_x,-15,model_z);
-      modelCube = cube.getDrawCube();
-      Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
-      Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-      drawCube();
-    }
-    //drawCube();
-
+    for (Map.Entry<String, DeviceInfo> e : DataControl.mDeviceInfos.entrySet()) {
+        String MapKey = e.getKey();
+        model_x = Float.valueOf(e.getValue().getPoint().x);
+        model_z = Float.valueOf(e.getValue().getPoint().z);
+        if(CubeControl.mCubeInfos.containsKey(MapKey)){
+          Cube cube = CubeControl.mCubeInfos.get(MapKey);
+          cube.setPoint(model_x,-15,model_z);
+          modelCube = cube.getDrawCube();
+        }
+        else {
+          Cube cube = new Cube(model_x, -15, model_z);
+          CubeControl.mCubeInfos.put(MapKey, cube);
+          modelCube = cube.getDrawCube();
+        }
+          Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+          Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+          drawCube();
+      }
     // Set modelView for the floor, so we draw floor in the correct location
-    Matrix.multiplyMM(modelView, 0, view, 0, modelFloor, 0);
+    Matrix.multiplyMM(modelView,0,view,0,modelFloor,0);
     Matrix.multiplyMM(modelViewProjection, 0, perspective, 0,
-      modelView, 0);
+            modelView, 0);
+
     drawFloor();
+
   }
 
   @Override
@@ -457,7 +460,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
   /**
    * Draw the cube.
-   *
+   * <p/>
    * <p>We've set all of our transformation matrices. Now we simply pass them into the shader.
    */
   public void drawCube() {
@@ -473,7 +476,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
     // Set the position of the cube
     GLES20.glVertexAttribPointer(cubePositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
-        false, 0, cubeVertices);
+            false, 0, cubeVertices);
 
     // Set the ModelViewProjection matrix in the shader.
     GLES20.glUniformMatrix4fv(cubeModelViewProjectionParam, 1, false, modelViewProjection, 0);
@@ -481,7 +484,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     // Set the normal positions of the cube, again for shading
     GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);
     GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
-        isTouchingAtObject() ? cubeFoundColors : cubeColors);
+            isTouchingAtObject() ? cubeFoundColors : cubeColors);
 
     GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
     checkGLError("Drawing cube");
@@ -489,7 +492,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
   /**
    * Draw the floor.
-   *
+   * <p/>
    * <p>This feeds in data for the floor into the shader. Note that this doesn't feed in data about
    * position of the light, so if we rewrite our code to draw the floor first, the lighting might
    * look strange.
@@ -506,7 +509,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     GLES20.glVertexAttribPointer(floorPositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
             false, 0, floorVertices);
     GLES20.glVertexAttribPointer(floorNormalParam, 3, GLES20.GL_FLOAT, false, 0,
-        floorNormals);
+            floorNormals);
     GLES20.glVertexAttribPointer(floorColorParam, 4, GLES20.GL_FLOAT, false, 0, floorColors);
 
     GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
@@ -535,7 +538,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
   /**
    * Find a new random position for the object.
-   *
+   * <p/>
    * <p>We'll rotate it around the Y-axis so it's out of sight, and then up or down by a little bit.
    */
   private void hideObject() {
@@ -550,7 +553,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     objectDistance = (float) Math.random() * 15 + 5;
     float objectScalingFactor = objectDistance / oldObjectDistance;
     Matrix.scaleM(rotationMatrix, 0, objectScalingFactor, objectScalingFactor,
-        objectScalingFactor);
+            objectScalingFactor);
     Matrix.multiplyMV(posVec, 0, rotationMatrix, 0, modelCube, 12);
 
     // Now get the up or down angle, between -20 and 20 degrees.
@@ -561,23 +564,25 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     Matrix.setIdentityM(modelCube, 0);
     Matrix.translateM(modelCube, 0, posVec[0], newY, posVec[2]);
   }
+
   private boolean isTouchingAtObject() {
 
-    float[] initVec = { 0, 0, 0, 1.0f };
+    float[] initVec = {0, 0, 0, 1.0f};
     float[] objPositionVec = new float[4];
-    boolean CheckTouchX,CheckTouchZ,CheckTouch;
-    CheckTouchX = CAMERA_X-3.0f < modelCube[12] && modelCube[12]  < CAMERA_X+3.0f;
-    CheckTouchZ = CAMERA_Z-3.0f < modelCube[14] && modelCube[14]  < CAMERA_Z+3.0f;
-    CheckTouch = CheckTouchX&&CheckTouchZ;
+    boolean CheckTouchX, CheckTouchZ, CheckTouch;
+    CheckTouchX = CAMERA_X - 3.0f < modelCube[12] && modelCube[12] < CAMERA_X + 3.0f;
+    CheckTouchZ = CAMERA_Z - 3.0f < modelCube[14] && modelCube[14] < CAMERA_Z + 3.0f;
+    CheckTouch = CheckTouchX && CheckTouchZ;
     return CheckTouch;
   }
+
   /**
    * Check if user is looking at object by calculating where the object is in eye-space.
    *
    * @return true if the user is looking at the object.
    */
   private boolean isLookingAtObject() {
-    float[] initVec = { 0, 0, 0, 1.0f };
+    float[] initVec = {0, 0, 0, 1.0f};
     float[] objPositionVec = new float[4];
 
     // Convert object space to camera space. Use the headView from onNewFrame.

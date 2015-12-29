@@ -15,6 +15,11 @@ public class Cube {
         Model_z = model_z;
     }
 
+    public void setPoint(float x, float y, float z){
+        this.Model_x = x;
+        this.Model_y = y;
+        this.Model_z = z;
+    }
     public float[] getDrawCube(){
         float[] modelCube = new float[16];
         Matrix.setIdentityM(modelCube,0);
