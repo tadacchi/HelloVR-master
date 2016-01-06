@@ -12,14 +12,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.HashMap;
 
 /**
  * Created by tokue on 2015/11/28.
  */
 public class UdpConnection {
     private final String TAG = "UDP-CONN";
-    private Context mContext;
     private WifiManager mWifiManager;
     private String mMyIpAddress;
     DeviceInfo mDeviceInfo;
@@ -31,7 +29,6 @@ public class UdpConnection {
 
     public UdpConnection(Context context, String name) {
         mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        mContext = context;
         mNetWorkMgr.setDeviceInfo(name, getMyIpAddress(),mNetWorkMgr.getMyPoint());
         mDeviceInfo = mNetWorkMgr.getDeviceInfo();
     }
@@ -140,6 +137,7 @@ public class UdpConnection {
                     mUdpSocket.setBroadcast(true);
                     String data = mNetWorkMgr.DeviceInfoFormat();
                     DatagramPacket packet = new DatagramPacket(data.getBytes(), data.getBytes().length, getBroadcastAddress(), UDP_PORT);
+                    System.out.println("Socket" + packet);
                     mUdpSocket.send(packet);
                 } catch (SocketException e) {
                     e.printStackTrace();

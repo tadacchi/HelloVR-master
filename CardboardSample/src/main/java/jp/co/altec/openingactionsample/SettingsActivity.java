@@ -14,18 +14,13 @@ import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 public class SettingsActivity extends Activity {
     UdpConnection udp;
-    int count = 0;
     Handler mHandler = new Handler();
     Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             if (udp == null) return;
-            /*if (count/4 > 0) {
-                udp.mDeviceInfo.setPoint(new Point(String.valueOf(count), "0", String.valueOf(++count)));
-            }*/
             udp.sendBroadcast();
             mHandler.postDelayed(mRunnable,300);
-            count++;
         }
     };
 
@@ -46,9 +41,13 @@ public class SettingsActivity extends Activity {
                     udp.stopReceiver();
                     udp = null;
                 }
-                udp = new UdpConnection(getApplicationContext(), ((BootstrapEditText)findViewById(R.id.editText)).getText().toString());
-                udp.receiveBroadcast();
-
+                if (mObserverBtn.isChecked()) {
+                    udp = new UdpConnection(getApplicationContext(),"GOAL");
+                    udp.receiveBroadcast();
+                }else {
+                    udp = new UdpConnection(getApplicationContext(), ((BootstrapEditText) findViewById(R.id.editText)).getText().toString());
+                    udp.receiveBroadcast();
+                }
                 Log.d("DEBUG", "/// DATA CONNECTION ///");
                 mHandler.postDelayed(mRunnable, 300);
 

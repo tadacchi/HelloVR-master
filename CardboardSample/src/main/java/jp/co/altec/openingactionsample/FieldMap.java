@@ -18,11 +18,12 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
     private Thread mThread;
     private int mScreen_width, mScreen_height;
 
+    private String GOAL = "GOAL";
     static final long FPS = 20;
     static final long FRAME_TIME = 1000 / FPS;
     static final int BALL_R = 10;
     int cx = BALL_R, cy = BALL_R;
-
+    int checkx = 0, checky = 0;
     public FieldMap(Context context) {
         super(context);
 
@@ -82,8 +83,12 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     cy = (int) (mScreen_height/2 + Float.valueOf(e.getValue().getPoint().z));
                     canvas.drawCircle(cx, cy, BALL_R, paint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
-                }
+                    if(cx == checkx && cy == checky){
 
+                        }else{
+                        checkTouchObject.checkTouchObject.put(e.getKey(),"Not Touch!");
+                    }
+                }
                 mSurfaceHolder.unlockCanvasAndPost(canvas);
                 waitTime = (loopCount * FRAME_TIME) - (System.currentTimeMillis() - startTime);
                 if( waitTime > 0 ) {

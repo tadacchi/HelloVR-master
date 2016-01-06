@@ -85,7 +85,7 @@ public class CardboardOverlayView extends LinearLayout {
     rightView.setOffset(-offset);
   }
 
-  private void setText(String text) {
+  public void setText(String text) {
     leftView.setText(text);
     rightView.setText(text);
   }
