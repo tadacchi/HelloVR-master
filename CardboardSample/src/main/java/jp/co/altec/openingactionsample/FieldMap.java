@@ -84,7 +84,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     canvas.drawCircle(cx, cy, BALL_R, paint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
                     if(cx == checkx && cy == checky){
-                        checkTouchObject.checkTouchObject.put(e.getKey(), e.getValue().getIpAddress());
+
                         }else{
                         checkTouchObject.checkTouchObject.put(e.getKey(), "NO");
                     }
@@ -98,4 +98,5 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
             }
         }
     }
+
 }

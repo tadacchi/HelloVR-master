@@ -13,7 +13,7 @@ public class CheckInfo {
         KeyIP = mKeyIP;
         CheckIP = mCheckIP;
     }
-    public get
+
 
     public CheckInfo parse(String in){
         String[] data = in.split(":");

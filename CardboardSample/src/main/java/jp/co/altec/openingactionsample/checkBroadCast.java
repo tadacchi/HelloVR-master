@@ -21,7 +21,7 @@ public class checkBroadCast {
     private final String TAG = "UDP-CONN";
     private WifiManager mWifiManager;
     private String mMyIpAddress;
-    private String KeyIP,ValueIP;
+    private String IP;
     CheckInfo mCheckInfo;
     NetWorkMgr mNetWorkMgr = NetWorkMgr.getInstance();
     private DatagramSocket mUdpSocket;
@@ -62,12 +62,12 @@ public class checkBroadCast {
                         // 送信元情報の取得
 
 
-                        CheckInfo info = mNetWorkMgr.parse(receiveData);
-                        if (info.)) {
-
+                        DeviceInfo info = mNetWorkMgr.parce(receiveData);
+                        if (!info.getIpAddress().equals(getMyIpAddress())) {
+                            DataControl.mDeviceInfos.put(info.getIpAddress(), info);
                         } else {
                             // test
-
+                            //DataControl.mDeviceInfos.put(info.getIpAddress(), info);
                             Log.d(TAG, "my device info receive :: " + info);
                         }
 
@@ -120,7 +120,7 @@ public class checkBroadCast {
     /**
      * 同一Wi-fiに接続している全端末に対してブロードキャスト送信を行う
      */
-    void sendBroadcast(){
+    void sendBroadcast(final String IPAddr){
         new Thread() {
             @Override
             public void run() {
@@ -128,15 +128,8 @@ public class checkBroadCast {
                     if (mUdpSocket == null) {
                         mUdpSocket = new DatagramSocket(UDP_PORT);
                     }
-                    for(Map.Entry<String, String> e : checkTouchObject.checkTouchObject.entrySet()){
-                        if(!checkTouchObject.checkTouchObject.containsValue("NO")){
-                            KeyIP = e.getKey();
-                            ValueIP = e.getValue();
-                        }
-                    }
-                    String data = KeyIP + ":"+ ValueIP;
                     mUdpSocket.setBroadcast(true);
-                    DatagramPacket packet = new DatagramPacket(data.getBytes(), data.getBytes().length, getBroadcastAddress(), UDP_PORT);
+                    DatagramPacket packet = new DatagramPacket(IPAddr.getBytes(), IPAddr.getBytes().length, getBroadcastAddress(), UDP_PORT);
                     System.out.println("Socket" + packet);
                     mUdpSocket.send(packet);
                 } catch (SocketException e) {
