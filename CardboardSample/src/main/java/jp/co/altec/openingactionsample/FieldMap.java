@@ -24,6 +24,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
     static final int BALL_R = 10;
     int cx = BALL_R, cy = BALL_R;
     int checkx = 0, checky = 0;
+
     public FieldMap(Context context) {
         super(context);
 
@@ -69,7 +70,6 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
         long loopCount = 0;
         long waitTime = 0;
         long startTime = System.currentTimeMillis();
-
         while(mThread != null) {
             try{
                 loopCount++;
@@ -84,9 +84,9 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     canvas.drawCircle(cx, cy, BALL_R, paint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
                     if(cx == checkx && cy == checky){
-
+                        checkTouchObject.checkTouchObject.put(e.getKey(), e.getValue().getIpAddress());
                         }else{
-                        checkTouchObject.checkTouchObject.put(e.getKey(),"Not Touch!");
+                        checkTouchObject.checkTouchObject.put(e.getKey(), "NO");
                     }
                 }
                 mSurfaceHolder.unlockCanvasAndPost(canvas);
