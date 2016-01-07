@@ -25,7 +25,7 @@ public class checkBroadCast {
     CheckInfo mCheckInfo;
     NetWorkMgr mNetWorkMgr = NetWorkMgr.getInstance();
     private DatagramSocket mUdpSocket;
-    private final int UDP_PORT = 10000;
+    private final int UDP_PORT = 11000;
     private boolean close = false;
 
     public checkBroadCast(Context context, String CheckIP) {
@@ -129,8 +129,8 @@ public class checkBroadCast {
                         mUdpSocket = new DatagramSocket(UDP_PORT);
                     }
                     mUdpSocket.setBroadcast(true);
-                    DatagramPacket packet = new DatagramPacket(IPAddr.getBytes(), IPAddr.getBytes().length, getBroadcastAddress(), UDP_PORT);
-                    System.out.println("Socket" + packet);
+                    String toCheckIP = IPAddr + getMyIpAddress();
+                    DatagramPacket packet = new DatagramPacket(toCheckIP.getBytes(), toCheckIP.getBytes().length, getBroadcastAddress(), UDP_PORT);
                     mUdpSocket.send(packet);
                 } catch (SocketException e) {
                     e.printStackTrace();

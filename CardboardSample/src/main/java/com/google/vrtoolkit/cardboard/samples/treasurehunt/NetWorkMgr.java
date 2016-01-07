@@ -66,66 +66,6 @@ public class NetWorkMgr {
             return mPoint;
         }
     }
-    public void setMyIpAddress(){
 
-    }
-
-        //To MainActivity
-    /*
-
-    //To SettingActivity
-    public void setMyPoint(Point myPoint) {
-        deviceInfo.setPoint(myPoint);
-    }
-
-    public Point getmPoint() {
-        return deviceInfo.getPoint();
-    }
-
-    //To UdpConnection
-    public String sendMyPoint() {
-        return deviceInfo.Format();
-    }
-
-    public void setOtherPoint(String receiveData) {
-        DeviceInfo info = DeviceInfo.parse(receiveData);
-        if (!info.getIpAddress().equals(mUdpConnection.getMyIpAddress())) {
-            mHashMap.put(info.getIpAddress(), info.Format());
-        } else {
-            // test
-            mHashMap.put(info.getIpAddress(), info.Format());
-            Log.d(TAG, "my device info receive :: " + info);
-        }
-    }
-
-    public UdpConnection mUdpConnection(Context mContext, String name) {
-        return new UdpConnection(mContext, name);
-    }
-    /*public String getOtherPoint(){
-        return mHashMap.get(getOtherIpAddress());
-    }
-    public String getMyPoint() {
-        return mHashMap.get(getMyIpAddress());
-    }
-
-
-    String getOtherIpAddress(){
-        int ipAddress_int = 0;
-
-    }
-}
-    String getMyIpAddress() {
-        int ipAddress_int = 0;
-
-        if (mWifiManager.getConnectionInfo() != null) {
-            ipAddress_int = mWifiManager.getConnectionInfo().getIpAddress();
-            mMyIpAddress = (ipAddress_int & 0xFF) + "." + (ipAddress_int >> 8 & 0xFF) + "." + (ipAddress_int >> 16 & 0xFF) + "." + (ipAddress_int >> 24 & 0xFF);
-        } else {
-            mMyIpAddress = null;
-        }
-
-        Log.d(TAG, "my ipAddress is " + mMyIpAddress);
-        return mMyIpAddress;
-    }*/
 }
 

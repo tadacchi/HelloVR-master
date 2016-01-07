@@ -17,8 +17,9 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
     private SurfaceHolder mSurfaceHolder;
     private Thread mThread;
     private int mScreen_width, mScreen_height;
-
+    checkBroadCast checkUDP;
     private String GOAL = "GOAL";
+    private String KeyIP;
     static final long FPS = 20;
     static final long FRAME_TIME = 1000 / FPS;
     static final int BALL_R = 10;
@@ -27,7 +28,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
 
     public FieldMap(Context context) {
         super(context);
-
+        checkUDP = new checkBroadCast(context,KeyIP);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
     }
@@ -75,18 +76,18 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                 loopCount++;
                 canvas = mSurfaceHolder.lockCanvas();
                 canvas.drawRect( 0, 0, mScreen_width, mScreen_height, bgPaint);
-
                 // Player情報描画
                 for(Map.Entry<String, DeviceInfo> e : DataControl.mDeviceInfos.entrySet()) {
                     System.out.println(e.getKey() + " : " + e.getValue());
+                    KeyIP = e.getKey();
                     cx = (int) (mScreen_width/2 + Float.valueOf(e.getValue().getPoint().x));
                     cy = (int) (mScreen_height/2 + Float.valueOf(e.getValue().getPoint().z));
                     canvas.drawCircle(cx, cy, BALL_R, paint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
                     if(cx == checkx && cy == checky){
-
-                        }else{
-                        checkTouchObject.checkTouchObject.put(e.getKey(), "NO");
+                        checkUDP.sendBroadcast(KeyIP);
+                    }else{
+                        checkUDP.sendBroadcast("No");
                     }
                 }
                 mSurfaceHolder.unlockCanvasAndPost(canvas);
