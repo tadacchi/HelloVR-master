@@ -43,6 +43,7 @@ import java.util.Map;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
+import jp.co.altec.openingactionsample.CheckTouchObject;
 import jp.co.altec.openingactionsample.DataControl;
 import jp.co.altec.openingactionsample.DeviceInfo;
 import jp.co.altec.openingactionsample.Point;
@@ -54,7 +55,7 @@ import jp.co.altec.openingactionsample.UdpConnection;
 public class MainActivity extends CardboardActivity implements CardboardView.StereoRenderer {
 
     private static final String TAG = "MainActivity";
-
+    private static final String Check = "0.0.0.0";
     private static final float Z_NEAR = 0.1f;
     private static final float Z_FAR = 100.0f;
 
@@ -204,7 +205,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         overlayView = (CardboardOverlayView) findViewById(R.id.overlay);
         overlayView.setText("message");
-        //overlayView.show3DToast("Pull the magnet when you find an object.");
     }
 
     @Override
@@ -371,7 +371,10 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);
         HeadPointX = headView[8] / 10;
         HeadPointZ = headView[10] / 10;
-
+//        PositiveCatchObjectEye_X = CAMERA_X + 3.0f;
+//        NegativeCatchObjectEye_X = CAMERA_X - 3.0f;
+//        PositiveCatchObjectEye_Z = CAMERA_Z + 3.0f;
+//        NegativeCatchObjectEye_Z = CAMERA_Z - 3.0f;
         float Wall_Z = 150.0f;
         float Wall_X = 150.0f;
 
@@ -387,8 +390,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         boolean culcZ = (HeadPointZ > 0) ? PositiveObjectInView_Z : NegativeObjectInView_Z;
         boolean BumpWallZ = (HeadPointZ > 0) ? PositiveWall_Z : NegativeWall_Z;
         boolean BumpWallX = (HeadPointX < 0) ? PositiveWall_X : NegativeWall_X;
-
-        if ((culcZ && culcX) || (BumpWallX || BumpWallZ)) {
+        if ( (culcZ && culcX) ||(BumpWallX || BumpWallZ)) {
             CAMERA_Z = Z_info;
         } else {
             CAMERA_Y = -floorDepth + 5.0f;
@@ -408,7 +410,22 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
             deviceInfo.setPoint(new Point(x, y, z));
         }
         headTransform.getHeadView(headView, 0);
+        Log.d("BAKA", mNetWorkMgr.getDeviceInfo().getIpAddress());
+        Log.d("AHO" ,mNetWorkMgr.getCheckInfo().getKeyIP());
+        if(mNetWorkMgr.getDeviceInfo() != null) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if (mNetWorkMgr.getCheckInfo().getKeyIP() != Check) {
+                        if (mNetWorkMgr.getCheckInfo().getKeyIP() == mNetWorkMgr.getDeviceInfo().getIpAddress()) {
+                            overlayView.show3DToast("Found it! Conguraturation! Winner :" + mNetWorkMgr.getDeviceInfo().getName());
+                        } else if (mNetWorkMgr.getCheckInfo().getKeyIP() != mNetWorkMgr.getDeviceInfo().getIpAddress()) {
+                            overlayView.show3DToast("Don't mind! Loser :" + mNetWorkMgr.getDeviceInfo().getName());
+                        }
 
+                    }
+                }
+            });
+        }
         checkGLError("onReadyToDraw");
     }
 
@@ -453,10 +470,13 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         Matrix.multiplyMM(modelView, 0, view, 0, modelFloor, 0);
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0,
                 modelView, 0);
-
         drawFloor();
 
+
+
+
     }
+
 
     @Override
     public void onFinishFrame(Viewport viewport) {
@@ -488,13 +508,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         // Set the normal positions of the cube, again for shading
         GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);
-        /*for (Map.Entry<String, DeviceInfo> e : DataControl.mDeviceInfos.entrySet()) {
-            String Name = "GOAL";
-            if(DataControl.mDeviceInfos.containsValue(mNetWorkMgr.getDeviceInfo().getName())){
-                GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
-                        isTouchingAtObject() ? cubeFoundColors : cubeColors);
-            }
-        }*/
+
         GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0, cubeColors);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
         checkGLError("Drawing cube");
@@ -529,7 +543,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     public void drawTreasure(Eye eye) {
         mPerspective = eye.getPerspective(Z_NEAR, Z_FAR);
         Matrix.setIdentityM(modelTreasure, 0);
-        Matrix.translateM(modelTreasure, 0, 0, 15, 0);
+        Matrix.translateM(modelTreasure, 0, 0, 0, 0);
         Matrix.scaleM(modelTreasure, 0, 0.1f, 3.0f, 0.1f);
         Matrix.multiplyMM(modelView, 0, view, 0, modelTreasure, 0);
         Matrix.multiplyMM(modelViewProjection, 0, mPerspective, 0, modelView, 0);
@@ -568,15 +582,12 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     public void onCardboardTrigger() {
         Log.i(TAG, "onCardboardTrigger");
 
-        //if (isTouchingAtObject()) {
+        if (isTouchingAtObject()) {
             score++;
-            overlayView.setText("message");
-            //overlayView.show3DToast("Found it! Look around for another one.\nScore = " + score);
+            //overlayView.setText("message");
+            overlayView.show3DToast("Found it! Look around for another one.\nScore = " + score);
             hideObject();
-       // } else {
-          //  overlayView.show3DToast("Look around to find the object!");
-        //}
-
+        }
         // Always give user feedback.
         vibrator.vibrate(50);
     }
@@ -610,8 +621,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         Matrix.translateM(modelCube, 0, posVec[0], newY, posVec[2]);
     }
 
-    private boolean isTouchingAtObject() {
 
+    private boolean isTouchingAtObject() {
         float[] initVec = {0, 0, 0, 1.0f};
         float[] objPositionVec = new float[4];
         boolean CheckTouchX, CheckTouchZ, CheckTouch;

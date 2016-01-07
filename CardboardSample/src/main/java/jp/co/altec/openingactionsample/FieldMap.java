@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.NetWorkMgr;
 
 import java.util.Map;
 
@@ -16,19 +19,20 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private SurfaceHolder mSurfaceHolder;
     private Thread mThread;
+    NetWorkMgr mNetWorkMgr = NetWorkMgr.getInstance();
     private int mScreen_width, mScreen_height;
-    checkBroadCast checkUDP;
+    CheckBroadCast checkUDP;
     private String GOAL = "GOAL";
     private String KeyIP;
     static final long FPS = 20;
     static final long FRAME_TIME = 1000 / FPS;
     static final int BALL_R = 10;
     int cx = BALL_R, cy = BALL_R;
-    int checkx = 0, checky = 0;
+    int checkx = 359, checky = 602;
 
     public FieldMap(Context context) {
         super(context);
-        checkUDP = new checkBroadCast(context,KeyIP);
+        checkUDP = new CheckBroadCast(context,KeyIP);
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
     }
@@ -52,18 +56,22 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public void run() {
+
         Canvas canvas = null;
-        Paint paint = new Paint();
+        Paint plpaint = new Paint();
         Paint bgPaint = new Paint();
         Paint txtPaint = new Paint();
-
+        Paint trpaint = new Paint();
         // Background
         bgPaint.setStyle(Paint.Style.FILL);
         bgPaint.setColor(Color.DKGRAY);
 
         // Player
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.RED);
+        plpaint.setStyle(Paint.Style.FILL);
+        plpaint.setColor(Color.GREEN);
+        //Treasure
+        trpaint.setStyle(Paint.Style.FILL);
+        trpaint.setColor(Color.YELLOW);
 
         txtPaint.setColor(Color.WHITE);
         txtPaint.setTextSize(18);
@@ -82,13 +90,21 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     KeyIP = e.getKey();
                     cx = (int) (mScreen_width/2 + Float.valueOf(e.getValue().getPoint().x));
                     cy = (int) (mScreen_height/2 + Float.valueOf(e.getValue().getPoint().z));
-                    canvas.drawCircle(cx, cy, BALL_R, paint);
+                    canvas.drawCircle(cx, cy, BALL_R, plpaint);
+                    canvas.drawCircle(checkx, checky, BALL_R, trpaint);
+                    canvas.drawText(GOAL, checkx, checky + BALL_R + 5, txtPaint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
-                    if(cx == checkx && cy == checky){
-                        checkUDP.sendBroadcast(KeyIP);
-                    }else{
-                        checkUDP.sendBroadcast("No");
+
+
+                    mNetWorkMgr.setCheckInfo(e.getKey());
+                    CheckInfo checkInfo = mNetWorkMgr.getCheckInfo();
+
+                    if (cx == checkx && cy == checky) {
+                        checkInfo.setKeyIP(e.getKey());
+                    } else {
+                        checkInfo.setKeyIP("0.0.0.0");
                     }
+
                 }
                 mSurfaceHolder.unlockCanvasAndPost(canvas);
                 waitTime = (loopCount * FRAME_TIME) - (System.currentTimeMillis() - startTime);

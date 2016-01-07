@@ -14,12 +14,14 @@ import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 public class SettingsActivity extends Activity {
     UdpConnection udp;
+    CheckBroadCast checkUDP;
     Handler mHandler = new Handler();
     Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             if (udp == null) return;
             udp.sendBroadcast();
+            checkUDP.sendBroadcast();
             mHandler.postDelayed(mRunnable,300);
         }
     };
@@ -48,6 +50,8 @@ public class SettingsActivity extends Activity {
                     udp = new UdpConnection(getApplicationContext(), ((BootstrapEditText) findViewById(R.id.editText)).getText().toString());
                     udp.receiveBroadcast();
                 }
+                checkUDP = new CheckBroadCast(getApplicationContext(), "CheckIP");
+                checkUDP.receiveBroadcast();
                 Log.d("DEBUG", "/// DATA CONNECTION ///");
                 mHandler.postDelayed(mRunnable, 300);
 

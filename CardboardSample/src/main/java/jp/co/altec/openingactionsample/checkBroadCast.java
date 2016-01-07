@@ -12,12 +12,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Map;
 
 /**
  * Created by 2015295 on 2016/01/06.
  */
-public class checkBroadCast {
+public class CheckBroadCast {
     private final String TAG = "UDP-CONN";
     private WifiManager mWifiManager;
     private String mMyIpAddress;
@@ -28,9 +27,9 @@ public class checkBroadCast {
     private final int UDP_PORT = 11000;
     private boolean close = false;
 
-    public checkBroadCast(Context context, String CheckIP) {
+    public CheckBroadCast(Context context, String Check) {
         mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        mNetWorkMgr.setCheckInfo(getMyIpAddress(),CheckIP);
+        mNetWorkMgr.setCheckInfo(getMyIpAddress());
         mCheckInfo = mNetWorkMgr.getCheckInfo();
     }
 
@@ -60,18 +59,17 @@ public class checkBroadCast {
                         receiveData = new String(buf, 0, length);
 
                         // 送信元情報の取得
-
-
-                        DeviceInfo info = mNetWorkMgr.parce(receiveData);
-                        if (!info.getIpAddress().equals(getMyIpAddress())) {
-                            DataControl.mDeviceInfos.put(info.getIpAddress(), info);
+                        String info = mNetWorkMgr.Check(receiveData);
+                        if (info != getMyIpAddress()) {
+                            mNetWorkMgr.setCheckInfo(info);
+                            Log.d(TAG, "Winner" + getMyIpAddress());
                         } else {
                             // test
-                            //DataControl.mDeviceInfos.put(info.getIpAddress(), info);
-                            Log.d(TAG, "my device info receive :: " + info);
+                            mNetWorkMgr.setCheckInfo(info);
+                            Log.d(TAG, "Loser" + getMyIpAddress());
                         }
 
-                        Log.d(TAG, "receive socketAddress is " + packet.getSocketAddress().toString() + " packet data : " + receiveData);
+                        Log.d(TAG, "receive Data : " + packet.getSocketAddress().toString() + " packet data : " + receiveData);
                     }
                     mUdpSocket.close();
                 } catch (SocketException e) {
@@ -120,7 +118,7 @@ public class checkBroadCast {
     /**
      * 同一Wi-fiに接続している全端末に対してブロードキャスト送信を行う
      */
-    void sendBroadcast(final String IPAddr){
+    void sendBroadcast(){
         new Thread() {
             @Override
             public void run() {
@@ -129,8 +127,9 @@ public class checkBroadCast {
                         mUdpSocket = new DatagramSocket(UDP_PORT);
                     }
                     mUdpSocket.setBroadcast(true);
-                    String toCheckIP = IPAddr + getMyIpAddress();
+                    String toCheckIP = mNetWorkMgr.getCheckInfo().getKeyIP();
                     DatagramPacket packet = new DatagramPacket(toCheckIP.getBytes(), toCheckIP.getBytes().length, getBroadcastAddress(), UDP_PORT);
+                    Log.d("CheckIP",toCheckIP + ":" + packet);
                     mUdpSocket.send(packet);
                 } catch (SocketException e) {
                     e.printStackTrace();

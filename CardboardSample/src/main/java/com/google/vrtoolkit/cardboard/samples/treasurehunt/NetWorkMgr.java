@@ -21,7 +21,6 @@ import java.net.SocketException;
  * Created by 2015295 on 2015/12/21.
  */
 public class NetWorkMgr {
-    String name,ipAddress, x, y, z;
     private DeviceInfo mDeviceInfo;
     private CheckInfo mCheckInfo;
     private Point mPoint;
@@ -48,15 +47,15 @@ public class NetWorkMgr {
         return mDeviceInfo.parse(in);
     }
 
-    public void setCheckInfo(String KeyIP, String CheckIP){
-        mCheckInfo = new CheckInfo(KeyIP , CheckIP);
+    public void setCheckInfo(String KeyIP){
+        mCheckInfo = new CheckInfo(KeyIP);
     }
     public CheckInfo getCheckInfo(){
         return mCheckInfo;
     }
 
-    public CheckInfo parse(String in){
-        return mCheckInfo.parse(in);
+    public String Check(String in){
+        return mCheckInfo.Check(in);
     }
     public Point getMyPoint(){
         if (mPoint == null){

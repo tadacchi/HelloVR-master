@@ -7,6 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by 2015295 on 2016/01/05.
  */
-public class checkTouchObject {
+public class CheckTouchObject {
     public static ConcurrentHashMap<String, String> checkTouchObject = new ConcurrentHashMap<>();
 }
