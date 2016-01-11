@@ -13,6 +13,7 @@ import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 public class SettingsActivity extends Activity {
+    private boolean OnCheckObserver = false;
     UdpConnection udp;
     CheckBroadCast checkUDP;
     Handler mHandler = new Handler();
@@ -21,8 +22,10 @@ public class SettingsActivity extends Activity {
         public void run() {
             if (udp == null) return;
             udp.sendBroadcast();
-            checkUDP.sendBroadcast();
-            mHandler.postDelayed(mRunnable,300);
+            if(OnCheckObserver) {
+                checkUDP.sendBroadcast();
+            }
+            mHandler.postDelayed(mRunnable, 300);
         }
     };
 
@@ -43,15 +46,19 @@ public class SettingsActivity extends Activity {
                     udp.stopReceiver();
                     udp = null;
                 }
+                checkUDP = new CheckBroadCast(getApplicationContext(), "CheckIP");
                 if (mObserverBtn.isChecked()) {
+                    OnCheckObserver = true;
+                    //checkUDP = new CheckBroadCast(getApplicationContext(), "CheckIP");
                     udp = new UdpConnection(getApplicationContext(),"GOAL");
                     udp.receiveBroadcast();
                 }else {
                     udp = new UdpConnection(getApplicationContext(), ((BootstrapEditText) findViewById(R.id.editText)).getText().toString());
                     udp.receiveBroadcast();
+                    //checkUDP = new CheckBroadCast(getApplicationContext(), "CheckIP");
+                    checkUDP.receiveBroadcast();
                 }
-                checkUDP = new CheckBroadCast(getApplicationContext(), "CheckIP");
-                checkUDP.receiveBroadcast();
+
                 Log.d("DEBUG", "/// DATA CONNECTION ///");
                 mHandler.postDelayed(mRunnable, 300);
 

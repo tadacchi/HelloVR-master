@@ -29,7 +29,7 @@ public class CheckBroadCast {
 
     public CheckBroadCast(Context context, String Check) {
         mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        mNetWorkMgr.setCheckInfo(getMyIpAddress());
+        mNetWorkMgr.setCheckInfo("0.0.0.0");
         mCheckInfo = mNetWorkMgr.getCheckInfo();
     }
 
@@ -127,6 +127,9 @@ public class CheckBroadCast {
                     }
                     mUdpSocket.setBroadcast(true);
                     String toCheckIP = mNetWorkMgr.getCheckInfo().getKeyIP();
+                    if(toCheckIP.equals(getMyIpAddress())){
+                        toCheckIP = "0.0.0.0";
+                    }
                     DatagramPacket packet = new DatagramPacket(toCheckIP.getBytes(), toCheckIP.getBytes().length, getBroadcastAddress(), UDP_PORT);
                     Log.d("CheckIP",toCheckIP + ":" + packet);
                     mUdpSocket.send(packet);

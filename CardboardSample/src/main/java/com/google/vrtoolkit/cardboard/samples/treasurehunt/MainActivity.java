@@ -26,9 +26,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Vibrator;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -38,16 +36,13 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
-import jp.co.altec.openingactionsample.CheckTouchObject;
 import jp.co.altec.openingactionsample.DataControl;
 import jp.co.altec.openingactionsample.DeviceInfo;
 import jp.co.altec.openingactionsample.Point;
-import jp.co.altec.openingactionsample.UdpConnection;
 
 /**
  * A Cardboard sample application.
@@ -412,6 +407,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         headTransform.getHeadView(headView, 0);
         Log.d("0000000",mNetWorkMgr.getCheckInfo().getKeyIP());
         if(!mNetWorkMgr.getCheckInfo().getKeyIP().equals(null)) {
+
             runOnUiThread(new Runnable() {
                 public void run() {
                     if (!mNetWorkMgr.getCheckInfo().getKeyIP().equals(Check)) {
