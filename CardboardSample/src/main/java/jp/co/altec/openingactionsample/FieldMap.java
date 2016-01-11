@@ -99,10 +99,10 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     if(checkInfo == null){
                         mNetWorkMgr.setCheckInfo("0.0.0.0");
                     }
-                    if(checkx-15 < cx&&cx < checkx +15){
+                    if(checkx-5 < cx&&cx < checkx +5){
                         CheckTouchX = true;
                     }
-                    if(checky-15 < cy&&cy < checky +15){
+                    if(checky-5 < cy&&cy < checky +5){
                         CheckTouchY = true;
                     }
                     if (CheckTouchX && CheckTouchY) {
