@@ -23,12 +23,9 @@ public class CheckInfo {
     public String Check(String in) {
         String data = in;
         String WinIP = null;
-        if (data != "0.0.0.0") {
-            WinIP = data;
-            return WinIP;
-        }
-//        if (WinIP != null) {
-//            return new CheckInfo(WinIP);
+//        if (!data.equals("0.0.0.0")) {
+//            WinIP = data;
+//            return WinIP;
 //        }
         return data;
     }

@@ -29,7 +29,8 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
     static final int BALL_R = 10;
     int cx = BALL_R, cy = BALL_R;
     int checkx = 359, checky = 602;
-
+    boolean CheckTouchX = false;
+    boolean CheckTouchY = false;
     public FieldMap(Context context) {
         super(context);
         checkUDP = new CheckBroadCast(context,KeyIP);
@@ -94,17 +95,21 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     canvas.drawCircle(checkx, checky, BALL_R, trpaint);
                     canvas.drawText(GOAL, checkx, checky + BALL_R + 5, txtPaint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
-
-
-                    mNetWorkMgr.setCheckInfo(e.getKey());
                     CheckInfo checkInfo = mNetWorkMgr.getCheckInfo();
-
-                    if (cx == checkx && cy == checky) {
+                    if(checkInfo == null){
+                        mNetWorkMgr.setCheckInfo("0.0.0.0");
+                    }
+                    if(checkx-15 < cx&&cx < checkx +15){
+                        CheckTouchX = true;
+                    }
+                    if(checky-15 < cy&&cy < checky +15){
+                        CheckTouchY = true;
+                    }
+                    if (CheckTouchX && CheckTouchY) {
                         checkInfo.setKeyIP(e.getKey());
                     } else {
                         checkInfo.setKeyIP("0.0.0.0");
                     }
-
                 }
                 mSurfaceHolder.unlockCanvasAndPost(canvas);
                 waitTime = (loopCount * FRAME_TIME) - (System.currentTimeMillis() - startTime);

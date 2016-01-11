@@ -204,7 +204,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
 
         overlayView = (CardboardOverlayView) findViewById(R.id.overlay);
-        overlayView.setText("message");
+        //overlayView.setText("message");
     }
 
     @Override
@@ -390,7 +390,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         boolean culcZ = (HeadPointZ > 0) ? PositiveObjectInView_Z : NegativeObjectInView_Z;
         boolean BumpWallZ = (HeadPointZ > 0) ? PositiveWall_Z : NegativeWall_Z;
         boolean BumpWallX = (HeadPointX < 0) ? PositiveWall_X : NegativeWall_X;
-        if ( (culcZ && culcX) ||(BumpWallX || BumpWallZ)) {
+        if ((BumpWallX || BumpWallZ)) {
             CAMERA_Z = Z_info;
         } else {
             CAMERA_Y = -floorDepth + 5.0f;
@@ -410,18 +410,16 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
             deviceInfo.setPoint(new Point(x, y, z));
         }
         headTransform.getHeadView(headView, 0);
-        Log.d("BAKA", mNetWorkMgr.getDeviceInfo().getIpAddress());
-        Log.d("AHO" ,mNetWorkMgr.getCheckInfo().getKeyIP());
-        if(mNetWorkMgr.getDeviceInfo() != null) {
+        Log.d("0000000",mNetWorkMgr.getCheckInfo().getKeyIP());
+        if(!mNetWorkMgr.getCheckInfo().getKeyIP().equals(null)) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    if (mNetWorkMgr.getCheckInfo().getKeyIP() != Check) {
-                        if (mNetWorkMgr.getCheckInfo().getKeyIP() == mNetWorkMgr.getDeviceInfo().getIpAddress()) {
+                    if (!mNetWorkMgr.getCheckInfo().getKeyIP().equals(Check)) {
+                        if (mNetWorkMgr.getCheckInfo().getKeyIP().equals(mNetWorkMgr.getDeviceInfo().getIpAddress())) {
                             overlayView.show3DToast("Found it! Conguraturation! Winner :" + mNetWorkMgr.getDeviceInfo().getName());
-                        } else if (mNetWorkMgr.getCheckInfo().getKeyIP() != mNetWorkMgr.getDeviceInfo().getIpAddress()) {
+                        } else if (!mNetWorkMgr.getCheckInfo().getKeyIP().equals(mNetWorkMgr.getDeviceInfo().getIpAddress())){
                             overlayView.show3DToast("Don't mind! Loser :" + mNetWorkMgr.getDeviceInfo().getName());
                         }
-
                     }
                 }
             });

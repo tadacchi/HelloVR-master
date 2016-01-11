@@ -57,10 +57,10 @@ public class CheckBroadCast {
 
                         int length = packet.getLength();
                         receiveData = new String(buf, 0, length);
-
+                        System.out.println(receiveData);
                         // 送信元情報の取得
                         String info = mNetWorkMgr.Check(receiveData);
-                        if (info != getMyIpAddress()) {
+                        if (!info.equals(getMyIpAddress())) {
                             mNetWorkMgr.setCheckInfo(info);
                             Log.d(TAG, "Winner" + getMyIpAddress());
                         } else {
@@ -68,7 +68,6 @@ public class CheckBroadCast {
                             mNetWorkMgr.setCheckInfo(info);
                             Log.d(TAG, "Loser" + getMyIpAddress());
                         }
-
                         Log.d(TAG, "receive Data : " + packet.getSocketAddress().toString() + " packet data : " + receiveData);
                     }
                     mUdpSocket.close();
