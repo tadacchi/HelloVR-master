@@ -28,7 +28,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
     static final long FRAME_TIME = 1000 / FPS;
     static final int BALL_R = 10;
     int cx = BALL_R, cy = BALL_R;
-    int checkx = 359, checky = 602;
+    int checkx = 0, checky = 0;
     boolean CheckTouchX = false;
     boolean CheckTouchY = false;
     public FieldMap(Context context) {
@@ -48,6 +48,8 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         mScreen_width = width;
         mScreen_height = height;
+        checkx = mScreen_width/2;
+        checky = mScreen_height/2;
     }
 
     @Override
@@ -57,7 +59,6 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public void run() {
-
         Canvas canvas = null;
         Paint plpaint = new Paint();
         Paint bgPaint = new Paint();
@@ -99,10 +100,10 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     if(checkInfo == null){
                         mNetWorkMgr.setCheckInfo("0.0.0.0");
                     }
-                    if(checkx-5 < cx&&cx < checkx +5){
+                    if(checkx-1 < cx&&cx < checkx+1){
                         CheckTouchX = true;
                     }
-                    if(checky-5 < cy&&cy < checky +5){
+                    if(checky-1 < cy&&cy < checky+1 ){
                         CheckTouchY = true;
                     }
                     if (CheckTouchX && CheckTouchY) {
