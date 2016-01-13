@@ -120,6 +120,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private float objectDistance = 12f;
     private float floorDepth = 20f;
     private String name, ipAddress;
+    private String CheckFight = null;
     NetWorkMgr mNetWorkMgr = NetWorkMgr.getInstance();
     private Vibrator vibrator;
     private CardboardOverlayView overlayView;
@@ -406,14 +407,19 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         }
         headTransform.getHeadView(headView, 0);
         if(!mNetWorkMgr.getCheckInfo().getKeyIP().equals(null)) {
-
             runOnUiThread(new Runnable() {
                 public void run() {
                     if (!mNetWorkMgr.getCheckInfo().getKeyIP().equals(Check)) {
-                        if (mNetWorkMgr.getCheckInfo().getKeyIP().equals(mNetWorkMgr.getDeviceInfo().getIpAddress())) {
-                            overlayView.show3DToast("Found it! Conguraturation! Winner :" + mNetWorkMgr.getDeviceInfo().getName());
-                        } else if (!mNetWorkMgr.getCheckInfo().getKeyIP().equals(mNetWorkMgr.getDeviceInfo().getIpAddress())){
-                            overlayView.show3DToast("Don't mind! Loser :" + mNetWorkMgr.getDeviceInfo().getName());
+                        if(CheckFight == null){
+                            CheckFight = mNetWorkMgr.getCheckInfo().getKeyIP();
+                            Log.d("CheckFight = " , CheckFight);
+                        }
+                        if(CheckFight!=null) {
+                            if (CheckFight.equals(mNetWorkMgr.getDeviceInfo().getIpAddress())) {
+                                overlayView.show3DToast("Found it! Conguraturation! Winner :" + mNetWorkMgr.getDeviceInfo().getName());
+                            } else if (!CheckFight.equals(mNetWorkMgr.getDeviceInfo().getIpAddress())) {
+                                overlayView.show3DToast("Don't mind! Loser :" + mNetWorkMgr.getDeviceInfo().getName());
+                            }
                         }
                     }
                 }
@@ -462,7 +468,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
                     CubeControl.mCubeInfos.put(MapKey, cube);
                     modelCube = cube.getDrawCube();
                 }
-                Matrix.scaleM(modelCube, 0, 1.0f, 10.0f, 1.0f);
+                Matrix.scaleM(modelCube, 0, 1.0f, 5.0f, 1.0f);
                 Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
                 Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
                 drawCube(e.getValue().getName());
