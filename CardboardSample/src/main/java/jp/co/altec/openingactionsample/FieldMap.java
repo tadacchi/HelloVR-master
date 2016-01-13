@@ -23,7 +23,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
     private int mScreen_width, mScreen_height;
     CheckBroadCast checkUDP;
     private String GOAL = "GOAL";
-    private String KeyIP;
+    private String KeyIP,CheckIP;
     static final long FPS = 20;
     static final long FRAME_TIME = 1000 / FPS;
     static final int BALL_R = 10;
@@ -93,21 +93,25 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     cx = (int) (mScreen_width/2 + Float.valueOf(e.getValue().getPoint().x));
                     cy = (int) (mScreen_height/2 + Float.valueOf(e.getValue().getPoint().z));
                     canvas.drawCircle(cx, cy, BALL_R, plpaint);
-                    canvas.drawCircle(checkx, checky, BALL_R, trpaint);
+                    canvas.drawCircle(checkx, checky, BALL_R+2, trpaint);
                     canvas.drawText(GOAL, checkx, checky + BALL_R + 5, txtPaint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
                     CheckInfo checkInfo = mNetWorkMgr.getCheckInfo();
                     if(checkInfo == null){
                         mNetWorkMgr.setCheckInfo("0.0.0.0");
                     }
-                    if(checkx-1 < cx&&cx < checkx+1){
+                    if(checkx-3 < cx&&cx < checkx+3 ){
                         CheckTouchX = true;
                     }
-                    if(checky-1 < cy&&cy < checky+1 ){
+                    if(checky-3 < cy&&cy < checky+3 ){
                         CheckTouchY = true;
                     }
                     if (CheckTouchX && CheckTouchY) {
-                        checkInfo.setKeyIP(e.getKey());
+                        CheckIP = e.getKey();
+                        checkInfo.setKeyIP(CheckIP);
+                        Log.d("TOUCH-IP = ", e.getKey());
+                        CheckTouchX = false;
+                        CheckTouchY = false;
                     } else {
                         checkInfo.setKeyIP("0.0.0.0");
                     }

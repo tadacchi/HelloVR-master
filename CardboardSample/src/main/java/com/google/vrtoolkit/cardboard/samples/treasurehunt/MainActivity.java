@@ -199,7 +199,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
 
         overlayView = (CardboardOverlayView) findViewById(R.id.overlay);
-        //overlayView.setText("message");
+        overlayView.show3DToast("オレンジ色のCubeを探せ");
     }
 
     @Override
@@ -405,7 +405,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
             deviceInfo.setPoint(new Point(x, y, z));
         }
         headTransform.getHeadView(headView, 0);
-        Log.d("0000000",mNetWorkMgr.getCheckInfo().getKeyIP());
         if(!mNetWorkMgr.getCheckInfo().getKeyIP().equals(null)) {
 
             runOnUiThread(new Runnable() {
@@ -446,18 +445,28 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
             String MapKey = e.getKey();
             model_x = Float.valueOf(e.getValue().getPoint().x);
             model_z = Float.valueOf(e.getValue().getPoint().z);
-            if (CubeControl.mCubeInfos.containsKey(MapKey)) {
-                Cube cube = CubeControl.mCubeInfos.get(MapKey);
-                cube.setPoint(model_x, -15, model_z);
-                modelCube = cube.getDrawCube();
+            if (e.getValue().getName().equals("GOAL")) {
+                Cube Tr = new Cube(Float.valueOf(e.getValue().getPoint().x),-15f,Float.valueOf(e.getValue().getPoint().z));
+                CubeControl.mCubeInfos.put(MapKey, Tr);
+                modelCube = Tr.getDrawCube();
+                Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+                Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+                drawCube(e.getValue().getName());
             } else {
-                Cube cube = new Cube(model_x, -15, model_z);
-                CubeControl.mCubeInfos.put(MapKey, cube);
-                modelCube = cube.getDrawCube();
+                if (CubeControl.mCubeInfos.containsKey(MapKey)) {
+                    Cube cube = CubeControl.mCubeInfos.get(MapKey);
+                    cube.setPoint(model_x, -20f, model_z);
+                    modelCube = cube.getDrawCube();
+                } else {
+                    Cube cube = new Cube(model_x, -20f, model_z);
+                    CubeControl.mCubeInfos.put(MapKey, cube);
+                    modelCube = cube.getDrawCube();
+                }
+                Matrix.scaleM(modelCube, 0, 1.0f, 10.0f, 1.0f);
+                Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
+                Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
+                drawCube(e.getValue().getName());
             }
-            Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
-            Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
-            drawCube();
         }
         drawTreasure(eye);
         // Set modelView for the floor, so we draw floor in the correct location
@@ -482,7 +491,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
      * <p/>
      * <p>We've set all of our transformation matrices. Now we simply pass them into the shader.
      */
-    public void drawCube() {
+    public void drawCube(String CheckName) {
         GLES20.glUseProgram(cubeProgram);
 
         GLES20.glUniform3fv(cubeLightPosParam, 1, lightPosInEyeSpace, 0);
@@ -502,8 +511,12 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         // Set the normal positions of the cube, again for shading
         GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);
-
-        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0, cubeColors);
+        if (CheckName.equals("GOAL")) {
+            GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0, cubeFoundColors);
+        }
+        else{
+            GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0, cubeColors);
+        }
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
         checkGLError("Drawing cube");
     }

@@ -7,13 +7,16 @@ import java.security.Key;
  */
 public class CheckInfo {
     private String KeyIP = "0.0.0.0";
-
+    private String Check = "0.0.0.0";
     public CheckInfo(String mKeyIP) {
         KeyIP = mKeyIP;
     }
 
     public void setKeyIP(String mKeyIP) {
-        this.KeyIP = mKeyIP;
+        if (!mKeyIP.equals("0.0.0.0")) {
+            Check = mKeyIP;
+        }
+        this.KeyIP = Check;
     }
 
     public String getKeyIP() {
@@ -23,10 +26,10 @@ public class CheckInfo {
     public String Check(String in) {
         String data = in;
         String WinIP = null;
-//        if (!data.equals("0.0.0.0")) {
-//            WinIP = data;
-//            return WinIP;
-//        }
+        if (!data.equals("0.0.0.0")) {
+            WinIP = data;
+            return WinIP;
+        }
         return data;
     }
 }
