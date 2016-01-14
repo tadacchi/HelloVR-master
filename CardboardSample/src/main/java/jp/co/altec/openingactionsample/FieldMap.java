@@ -75,7 +75,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
         trpaint.setStyle(Paint.Style.FILL);
         trpaint.setColor(Color.YELLOW);
 
-        txtPaint.setColor(Color.WHITE);
+        txtPaint.setColor(Color.CYAN);
         txtPaint.setTextSize(18);
 
         long loopCount = 0;
@@ -93,7 +93,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     cx = (int) (mScreen_width/2 + Float.valueOf(e.getValue().getPoint().x));
                     cy = (int) (mScreen_height/2 + Float.valueOf(e.getValue().getPoint().z));
                     canvas.drawCircle(cx, cy, BALL_R, plpaint);
-                    canvas.drawCircle(checkx, checky, BALL_R+2, trpaint);
+                    canvas.drawCircle(checkx, checky, BALL_R, trpaint);
                     canvas.drawText(GOAL, checkx, checky + BALL_R + 5, txtPaint);
                     canvas.drawText(e.getValue().getName(), cx, cy + BALL_R + 5, txtPaint);
                     CheckInfo checkInfo = mNetWorkMgr.getCheckInfo();
@@ -109,7 +109,6 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                     if (CheckTouchX && CheckTouchY) {
                         CheckIP = e.getKey();
                         checkInfo.setKeyIP(CheckIP);
-                        Log.d("TOUCH-IP = ", e.getKey());
                         CheckTouchX = false;
                         CheckTouchY = false;
                     } else {

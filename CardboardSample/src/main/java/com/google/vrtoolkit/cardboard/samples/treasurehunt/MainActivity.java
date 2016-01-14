@@ -367,10 +367,10 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         Matrix.rotateM(modelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);
         HeadPointX = headView[8] / 10;
         HeadPointZ = headView[10] / 10;
-//        PositiveCatchObjectEye_X = CAMERA_X + 3.0f;
-//        NegativeCatchObjectEye_X = CAMERA_X - 3.0f;
-//        PositiveCatchObjectEye_Z = CAMERA_Z + 3.0f;
-//        NegativeCatchObjectEye_Z = CAMERA_Z - 3.0f;
+        PositiveCatchObjectEye_X = CAMERA_X + 1.0f;
+        NegativeCatchObjectEye_X = CAMERA_X - 1.0f;
+        PositiveCatchObjectEye_Z = CAMERA_Z + 1.0f;
+        NegativeCatchObjectEye_Z = CAMERA_Z - 1.0f;
         float Wall_Z = 150.0f;
         float Wall_X = 150.0f;
 
@@ -386,7 +386,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         boolean culcZ = (HeadPointZ > 0) ? PositiveObjectInView_Z : NegativeObjectInView_Z;
         boolean BumpWallZ = (HeadPointZ > 0) ? PositiveWall_Z : NegativeWall_Z;
         boolean BumpWallX = (HeadPointX < 0) ? PositiveWall_X : NegativeWall_X;
-        if ((BumpWallX || BumpWallZ)) {
+        if ((culcX && culcZ) || BumpWallX || BumpWallZ) {
             CAMERA_Z = Z_info;
         } else {
             CAMERA_Y = -floorDepth + 5.0f;
@@ -468,13 +468,12 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
                     CubeControl.mCubeInfos.put(MapKey, cube);
                     modelCube = cube.getDrawCube();
                 }
-                Matrix.scaleM(modelCube, 0, 1.0f, 5.0f, 1.0f);
+                Matrix.scaleM(modelCube, 0, 1.0f, 6.0f, 1.0f);
                 Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
                 Matrix.multiplyMM(modelViewProjection, 0, perspective, 0, modelView, 0);
                 drawCube(e.getValue().getName());
             }
         }
-        drawTreasure(eye);
         // Set modelView for the floor, so we draw floor in the correct location
         Matrix.multiplyMM(modelView, 0, view, 0, modelFloor, 0);
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0,
@@ -551,41 +550,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 
         checkGLError("drawing floor");
-    }
-
-    public void drawTreasure(Eye eye) {
-        mPerspective = eye.getPerspective(Z_NEAR, Z_FAR);
-        Matrix.setIdentityM(modelTreasure, 0);
-        Matrix.translateM(modelTreasure, 0, 0, 0, 0);
-        Matrix.scaleM(modelTreasure, 0, 0.1f, 3.0f, 0.1f);
-        Matrix.multiplyMM(modelView, 0, view, 0, modelTreasure, 0);
-        Matrix.multiplyMM(modelViewProjection, 0, mPerspective, 0, modelView, 0);
-        drawTreasure();
-    }
-
-    public void drawTreasure(){
-        GLES20.glUseProgram(cubeProgram);
-
-        GLES20.glUniform3fv(cubeLightPosParam, 1, lightPosInEyeSpace, 0);
-
-        // Set the Model in the shader, used to calculate lighting
-        GLES20.glUniformMatrix4fv(cubeModelParam, 1, false, modelTreasure, 0);
-
-        // Set the ModelView in the shader, used to calculate lighting
-        GLES20.glUniformMatrix4fv(cubeModelViewParam, 1, false, modelView, 0);
-
-        // Set the position of the cube
-        GLES20.glVertexAttribPointer(cubePositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
-                false, 0, cubeVertices);
-
-        // Set the ModelViewProjection matrix in the shader.
-        GLES20.glUniformMatrix4fv(cubeModelViewProjectionParam, 1, false, modelViewProjection, 0);
-        // Set the normal positions of the cube, again for shading
-        GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);
-        GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0,
-                isTouchingAtObject() ? cubeFoundColors : cubeColors);
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
-        checkGLError("Drawing Treasure");
     }
 
     /**

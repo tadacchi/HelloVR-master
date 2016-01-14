@@ -19,7 +19,13 @@ apply plugin: 'android'
 android {
     compileSdkVersion 22
     buildToolsVersion '23.0.0'
-
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def file = output.outputFile
+            def fileName = "Hello-VR.apk"
+            output.outputFile = new File(file.parent, fileName)
+        }
+    }
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 19
