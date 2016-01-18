@@ -1,6 +1,8 @@
 package jp.co.altec.openingactionsample;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,6 +11,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.google.vrtoolkit.cardboard.samples.treasurehunt.NetWorkMgr;
+import com.google.vrtoolkit.cardboard.samples.treasurehunt.R;
 
 import java.util.Map;
 
@@ -59,6 +62,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public void run() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.radar3);
         Canvas canvas = null;
         Paint plpaint = new Paint();
         Paint bgPaint = new Paint();
@@ -86,6 +90,8 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
                 loopCount++;
                 canvas = mSurfaceHolder.lockCanvas();
                 canvas.drawRect( 0, 0, mScreen_width, mScreen_height, bgPaint);
+                canvas.drawRect( 0, 0, mScreen_width, mScreen_height, bgPaint);
+                canvas.drawBitmap(bitmap, mScreen_width / 2 - bitmap.getWidth() / 2, mScreen_height / 2 - bitmap.getHeight() / 2, null);
                 // Player情報描画
                 for(Map.Entry<String, DeviceInfo> e : DataControl.mDeviceInfos.entrySet()) {
                     System.out.println(e.getKey() + " : " + e.getValue());
