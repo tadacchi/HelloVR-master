@@ -62,6 +62,7 @@ public class FieldMap extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public void run() {
+        //ドラゴンレーダー！
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.radar3);
         Canvas canvas = null;
         Paint plpaint = new Paint();
