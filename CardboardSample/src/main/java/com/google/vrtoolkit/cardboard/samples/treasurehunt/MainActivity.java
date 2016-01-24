@@ -340,8 +340,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         GLES20.glEnableVertexAttribArray(floorColorParam);
 
         checkGLError("Floor program params");
-        CAMERA_X = (float) Math.random() * 180 - 90;
-        CAMERA_Z = (float) Math.random() * 180 - 90;
+        CAMERA_X = (float) Math.random() * 80 - 40;
+        CAMERA_Z = (float) Math.random() * 80 - 40;
         Z_info = CAMERA_Z;
 
         // Object first appears directly in front of user.
@@ -432,11 +432,9 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         }
         // Build the camera matrix and apply it to the ModelView.
         Matrix.setLookAtM(camera, 0, CAMERA_X, CAMERA_Y, CAMERA_Z, 0.0f, 0.0f, 200.0f, 0.0f, 1.0f, 0.0f);
-        //CAMERA_X,CAMERA_Y,CAMERA_Z
         String x = String.valueOf(CAMERA_X);
         String y = String.valueOf(CAMERA_Y);
         String z = String.valueOf(CAMERA_Z);
-        System.out.println("Main!! x = " + x + " y = " + y + " z = " + z);
         DeviceInfo deviceInfo = mNetWorkMgr.getDeviceInfo();
         if (deviceInfo != null) {
             deviceInfo.setPoint(new Point(x, y, z));
@@ -455,6 +453,11 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
                                 overlayView.show3DToast("Found it! Conguraturation! Winner :" + mNetWorkMgr.getDeviceInfo().getName());
                             } else if (!CheckFight.equals(mNetWorkMgr.getDeviceInfo().getIpAddress())) {
                                 overlayView.show3DToast("Don't mind! Loser :" + mNetWorkMgr.getDeviceInfo().getName());
+                            }
+                            for(int count = 0; count <= 500; count++){
+                                if(count == 500){
+                                    CheckFight = null;
+                                }
                             }
                         }
                     }
