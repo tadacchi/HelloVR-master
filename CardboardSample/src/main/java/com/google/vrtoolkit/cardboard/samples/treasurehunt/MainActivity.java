@@ -21,6 +21,7 @@ import com.google.vrtoolkit.cardboard.CardboardView;
 import com.google.vrtoolkit.cardboard.Eye;
 import com.google.vrtoolkit.cardboard.HeadTransform;
 import com.google.vrtoolkit.cardboard.Viewport;
+import com.google.vrtoolkit.cardboard.audio.CardboardAudioEngine;
 
 import android.content.Context;
 import android.opengl.GLES20;
@@ -201,13 +202,33 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         overlayView = (CardboardOverlayView) findViewById(R.id.overlay);
         overlayView.show3DToast("オレンジ色のCubeを探せ");
+    	
+    	// Initialize 3D audio engine.
+    	cardboardAudioEngine =
+        new CardboardAudioEngine(getAssets(), CardboardAudioEngine.RenderingQuality.HIGH);
     }
 
+    @Override
+    public void onPause() {
+        cardboardAudioEngine.pause();
+        super.onPause();
+    }
     @Override
     public void onRendererShutdown() {
         Log.i(TAG, "onRendererShutdown");
     }
-
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        cardboardAudioEngine.resume();
+    }
+    
+    @Override
+    public void onRendererShutdown() {
+        Log.i(TAG, "onRendererShutdown");
+    }
+    
     @Override
     public void onSurfaceChanged(int width, int height) {
         Log.i(TAG, "onSurfaceChanged");
@@ -329,7 +350,22 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         Matrix.setIdentityM(modelFloor, 0);
         Matrix.translateM(modelFloor, 0, 0, -floorDepth, 0); // Floor appears below user.
-
+        // Avoid any delays during start-up due to decoding of sound files.
+        new Thread(
+            new Runnable() {
+                public void run() {
+                    // Start spatial audio playback of SOUND_FILE at the model postion. The returned
+                    //soundId handle is stored and allows for repositioning the sound object whenever
+                    // the cube position changes.
+                    cardboardAudioEngine.preloadSoundFile(SOUND_FILE);
+                    soundId = cardboardAudioEngine.createSoundObject(SOUND_FILE);
+                    cardboardAudioEngine.setSoundObjectPosition(
+                        soundId, modelPosition[0], modelPosition[1], modelPosition[2]);
+                    cardboardAudioEngine.playSound(soundId, true /* looped playback */);
+                }
+            })
+        .start();
+        
         checkGLError("onSurfaceCreated");
     }
 
