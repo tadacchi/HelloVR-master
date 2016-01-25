@@ -119,7 +119,9 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private float[] modelTreasure;
     private float[] mPerspective;
 
+    private int i = 50;
     private float[] headRotation;
+    private float Sound_X,Sound_Z;
 
     private int score = 0;
     private float objectDistance = 12f;
@@ -355,23 +357,26 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         Matrix.setIdentityM(modelFloor, 0);
         Matrix.translateM(modelFloor, 0, 0, -floorDepth, 0); // Floor appears below user.
         // Avoid any delays during start-up due to decoding of sound files.
-        new Thread(
-                new Runnable() {
-                    public void run() {
-                        // Start spatial audio playback of SOUND_FILE at the model postion. The returned
-                        //soundId handle is stored and allows for repositioning the sound object whenever
-                        // the cube position changes.
-                        cardboardAudioEngine.preloadSoundFile(SOUND_FILE);
-                        soundId = cardboardAudioEngine.createSoundObject(SOUND_FILE);
-                        cardboardAudioEngine.setSoundObjectPosition(soundId, -1, -1, -1);
-                        cardboardAudioEngine.playSound(soundId, true /* looped playback */);
-                    }
-                })
-                .start();
+        runOnUiThread(new Runnable() {
+            public void run() {
+//                 Start spatial audio playback of SOUND_FILE at the model postion. The returned
+//                soundId handle is stored and allows for repositioning the sound object whenever
+//                 the cube position changes.
+                cardboardAudioEngine.preloadSoundFile(SOUND_FILE);
+                soundId = cardboardAudioEngine.createSoundObject(SOUND_FILE);
+                Log.i("TAGTAGTAG", "onCardboardTrigger");
+                DeviceInfo deviceInfo = mNetWorkMgr.getDeviceInfo();
+                Sound_X = Float.valueOf(deviceInfo.getPoint().x);
+                Sound_Z = Float.valueOf(deviceInfo.getPoint().z);
+                cardboardAudioEngine.setSoundObjectPosition(soundId, 0, -15, 0);
+                cardboardAudioEngine.playSound(soundId, true /* looped playback */);
+                }
+
+        });
         // Update the sound location to match it with the new cube position.
         if (soundId != CardboardAudioEngine.INVALID_ID) {
             cardboardAudioEngine.setSoundObjectPosition(
-                    soundId, -1, -1, -1);
+                    soundId, -1+i, -1+i, -1+i);
         }
         checkGLError("onSurfaceCreated");
     }
@@ -451,7 +456,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         // Update the 3d audio engine with the most recent head rotation.
         headTransform.getQuaternion(headRotation, 0);
         cardboardAudioEngine.setHeadRotation(headRotation[0], headRotation[1], headRotation[2], headRotation[3]);
-
+        cardboardAudioEngine.setHeadPosition(CAMERA_X, CAMERA_Y, CAMERA_Z);
         if (!mNetWorkMgr.getCheckInfo().getKeyIP().equals(null)) {
             runOnUiThread(new Runnable() {
                 public void run() {
@@ -606,7 +611,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
      */
     @Override
     public void onCardboardTrigger() {
-        Log.i(TAG, "onCardboardTrigger");
+
 
         if (isTouchingAtObject()) {
             score++;
