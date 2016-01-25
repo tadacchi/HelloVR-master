@@ -80,7 +80,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private final float[] lightPosInEyeSpace = new float[4];
 
     private static final String SOUND_FILE = "cube_sound.wav";
-    
+
     private FloatBuffer floorVertices;
     private FloatBuffer floorColors;
     private FloatBuffer floorNormals;
@@ -134,6 +134,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
     private CardboardAudioEngine cardboardAudioEngine;
     private volatile int soundId = CardboardAudioEngine.INVALID_ID;
+
     /**
      * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
      *
@@ -164,7 +165,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         return shader;
     }
-
 
 
     /**
@@ -210,10 +210,10 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         overlayView = (CardboardOverlayView) findViewById(R.id.overlay);
         overlayView.show3DToast("オレンジ色のCubeを探せ");
-    	
-    	// Initialize 3D audio engine.
-    	cardboardAudioEngine =
-        new CardboardAudioEngine(getAssets(), CardboardAudioEngine.RenderingQuality.HIGH);
+
+        // Initialize 3D audio engine.
+        cardboardAudioEngine =
+                new CardboardAudioEngine(getAssets(), CardboardAudioEngine.RenderingQuality.HIGH);
     }
 
     @Override
@@ -221,18 +221,18 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         cardboardAudioEngine.pause();
         super.onPause();
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
         cardboardAudioEngine.resume();
     }
-    
+
     @Override
     public void onRendererShutdown() {
         Log.i(TAG, "onRendererShutdown");
     }
-    
+
     @Override
     public void onSurfaceChanged(int width, int height) {
         Log.i(TAG, "onSurfaceChanged");
@@ -356,29 +356,22 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         Matrix.translateM(modelFloor, 0, 0, -floorDepth, 0); // Floor appears below user.
         // Avoid any delays during start-up due to decoding of sound files.
         new Thread(
-            new Runnable() {
-                public void run() {
-                    // Start spatial audio playback of SOUND_FILE at the model postion. The returned
-                    //soundId handle is stored and allows for repositioning the sound object whenever
-                    // the cube position changes.
-                    cardboardAudioEngine.preloadSoundFile(SOUND_FILE);
-                    soundId = cardboardAudioEngine.createSoundObject(SOUND_FILE);
-                    for (Map.Entry<String, DeviceInfo> e : DataControl.mDeviceInfos.entrySet()) {
-                        if (e.getValue().getName().equals("GOAL")) {
-                            Gmodel_x = Float.valueOf(e.getValue().getPoint().x);
-                            Gmodel_y = Float.valueOf(e.getValue().getPoint().y);
-                            Gmodel_z = Float.valueOf(e.getValue().getPoint().z);
-                            cardboardAudioEngine.setSoundObjectPosition(soundId, model_x, model_y, model_z);
-                            cardboardAudioEngine.playSound(soundId, true /* looped playback */);
-                        }
+                new Runnable() {
+                    public void run() {
+                        // Start spatial audio playback of SOUND_FILE at the model postion. The returned
+                        //soundId handle is stored and allows for repositioning the sound object whenever
+                        // the cube position changes.
+                        cardboardAudioEngine.preloadSoundFile(SOUND_FILE);
+                        soundId = cardboardAudioEngine.createSoundObject(SOUND_FILE);
+                        cardboardAudioEngine.setSoundObjectPosition(soundId, -1, -1, -1);
+                        cardboardAudioEngine.playSound(soundId, true /* looped playback */);
                     }
-                }
-            })
-        .start();
-            // Update the sound location to match it with the new cube position.
+                })
+                .start();
+        // Update the sound location to match it with the new cube position.
         if (soundId != CardboardAudioEngine.INVALID_ID) {
             cardboardAudioEngine.setSoundObjectPosition(
-                soundId, model_x, model_y, model_z);
+                    soundId, -1, -1, -1);
         }
         checkGLError("onSurfaceCreated");
     }
@@ -454,28 +447,29 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
             deviceInfo.setPoint(new Point(x, y, z));
         }
         headTransform.getHeadView(headView, 0);
-        
+
         // Update the 3d audio engine with the most recent head rotation.
         headTransform.getQuaternion(headRotation, 0);
         cardboardAudioEngine.setHeadRotation(headRotation[0], headRotation[1], headRotation[2], headRotation[3]);
-        
-        if(!mNetWorkMgr.getCheckInfo().getKeyIP().equals(null)) {
+
+        if (!mNetWorkMgr.getCheckInfo().getKeyIP().equals(null)) {
             runOnUiThread(new Runnable() {
                 public void run() {
                     if (!mNetWorkMgr.getCheckInfo().getKeyIP().equals(Check)) {
-                        if(CheckFight == null){
+                        if (CheckFight == null) {
                             CheckFight = mNetWorkMgr.getCheckInfo().getKeyIP();
-                            Log.d("CheckFight = " , CheckFight);
+                            Log.d("CheckFight = ", CheckFight);
                         }
-                        if(CheckFight!=null) {
+                        if (CheckFight != null) {
                             if (CheckFight.equals(mNetWorkMgr.getDeviceInfo().getIpAddress())) {
                                 overlayView.show3DToast("Found it! Conguraturation! Winner :" + mNetWorkMgr.getDeviceInfo().getName());
                             } else if (!CheckFight.equals(mNetWorkMgr.getDeviceInfo().getIpAddress())) {
                                 overlayView.show3DToast("Don't mind! Loser :" + mNetWorkMgr.getDeviceInfo().getName());
                             }
-                            for(int count = 0; count <= 500; count++){
-                                if(count == 500){
+                            for (int count = 0; count <= 500; count++) {
+                                if (count > 450) {
                                     CheckFight = null;
+                                    System.out.print(CheckFight);
                                 }
                             }
                         }
@@ -510,7 +504,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
             model_x = Float.valueOf(e.getValue().getPoint().x);
             model_z = Float.valueOf(e.getValue().getPoint().z);
             if (e.getValue().getName().equals("GOAL")) {
-                Cube Tr = new Cube(Float.valueOf(e.getValue().getPoint().x),-15f,Float.valueOf(e.getValue().getPoint().z));
+                Cube Tr = new Cube(Float.valueOf(e.getValue().getPoint().x), -15f, Float.valueOf(e.getValue().getPoint().z));
                 CubeControl.mCubeInfos.put(MapKey, Tr);
                 modelCube = Tr.getDrawCube();
                 Matrix.multiplyMM(modelView, 0, view, 0, modelCube, 0);
@@ -537,8 +531,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         Matrix.multiplyMM(modelViewProjection, 0, perspective, 0,
                 modelView, 0);
         drawFloor();
-
-
 
 
     }
@@ -576,8 +568,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         GLES20.glVertexAttribPointer(cubeNormalParam, 3, GLES20.GL_FLOAT, false, 0, cubeNormals);
         if (CheckName.equals("GOAL")) {
             GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0, cubeFoundColors);
-        }
-        else{
+        } else {
             GLES20.glVertexAttribPointer(cubeColorParam, 4, GLES20.GL_FLOAT, false, 0, cubeColors);
         }
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);

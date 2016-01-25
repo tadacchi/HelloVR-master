@@ -16,7 +16,8 @@ public class CheckInfo {
         if (!mKeyIP.equals("0.0.0.0")) {
             Check = mKeyIP;
         }
-        this.KeyIP = Check;
+//      this.KeyIP = Check;
+        this.KeyIP = mKeyIP;
     }
 
     public String getKeyIP() {
@@ -26,10 +27,10 @@ public class CheckInfo {
     public String Check(String in) {
         String data = in;
         String WinIP = null;
-        if (!data.equals("0.0.0.0")) {
-            WinIP = data;
-            return WinIP;
-        }
+//        if (!data.equals("0.0.0.0")) {
+//            WinIP = data;
+//            return WinIP;
+//        }
         return data;
     }
 }

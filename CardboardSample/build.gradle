@@ -17,6 +17,14 @@
 apply plugin: 'android'
 
 android {
+    signingConfigs {
+        Hello_VR {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('C:/Users/2015295/.android/debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion '23.0.0'
     android.applicationVariants.all { variant ->
@@ -32,11 +40,15 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
     lintOptions.abortOnError false
+    buildTypes {
+        release {
+            signingConfig signingConfigs.Hello_VR
+        }
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.beardedhen:androidbootstrap:2.0.1'
 }

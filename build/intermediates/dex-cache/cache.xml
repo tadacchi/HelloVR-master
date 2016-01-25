@@ -2,11 +2,11 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\2015295\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\libprotobuf-java-2.6-nano.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
-        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-d0299d70e97b8873055315b2aa4ce670bfbfb7d8.jar" />
+        sha1="2ba3ce68542db5a4b672a22606e4fd4631ed5c4f">
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-d38c8313c14efe04099668e48b265966020c8a41.jar" />
     </item>
     <item
         jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\cardboard.jar"
@@ -16,11 +16,32 @@
         <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\cardboard-7ccad2beadd7506101c195791dc0947b017723dc.jar" />
     </item>
     <item
-        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\libprotobuf-java-2.6-nano.jar"
+        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\exploded-aar\com.beardedhen\androidbootstrap\2.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="2ba3ce68542db5a4b672a22606e4fd4631ed5c4f">
-        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\libprotobuf-java-2.6-nano-d38c8313c14efe04099668e48b265966020c8a41.jar" />
+        sha1="14d494487b6ab2e3740527221055a99f50b0a697">
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\release\classes-89e8bc12b0629d62a422ed4051e70db4ed2962f7.jar" />
+    </item>
+    <item
+        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\jbullet.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="3e9357c56c03ecdd2670eb09b8d63f94c1f85459">
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\release\jbullet-4e0dc3c7d208910b81aafde80de02737d420bbde.jar" />
+    </item>
+    <item
+        jar="C:\Users\2015295\AppData\Local\Android\sdk1\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\debug\support-annotations-23.1.1-d0299d70e97b8873055315b2aa4ce670bfbfb7d8.jar" />
+    </item>
+    <item
+        jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\vecmath.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8624267a63f22a052c38d2423cd24f4418e1bceb">
+        <dex dex="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\build\intermediates\pre-dexed\release\vecmath-02aab3a85b648e0741d11c289fe92a7326d2a1a2.jar" />
     </item>
     <item
         jar="C:\Users\2015295\Desktop\HelloVR-master\CardboardSample\libs\audio.jar"
