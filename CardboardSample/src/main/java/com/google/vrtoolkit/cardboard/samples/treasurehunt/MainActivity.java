@@ -1,6 +1,6 @@
 /*
  * Copyright 2014 Google Inc. All Rights Reserved.
-
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -65,8 +65,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private float HeadPointX = 0.0f;
     private float HeadPointY = 0.0f;
     private float HeadPointZ = 0.0f;
-    private float model_x, model_z;
-
+    private float model_x, model_y, model_z;
+    private float Gmodel_x, Gmodel_y, Gmodel_z;
     private static final float TIME_DELTA = 0.3f;
 
     private static final float YAW_LIMIT = 0.12f;
@@ -79,6 +79,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
     private final float[] lightPosInEyeSpace = new float[4];
 
+    private static final String SOUND_FILE = "cube_sound.wav";
+    
     private FloatBuffer floorVertices;
     private FloatBuffer floorColors;
     private FloatBuffer floorNormals;
@@ -117,6 +119,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private float[] modelTreasure;
     private float[] mPerspective;
 
+    private float[] headRotation;
+
     private int score = 0;
     private float objectDistance = 12f;
     private float floorDepth = 20f;
@@ -128,6 +132,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
     private float PositiveCatchObjectEye_X, PositiveCatchObjectEye_Z, NegativeCatchObjectEye_X, NegativeCatchObjectEye_Z;
 
+    private CardboardAudioEngine cardboardAudioEngine;
+    private volatile int soundId = CardboardAudioEngine.INVALID_ID;
     /**
      * Converts a raw text file, saved as a resource, into an OpenGL ES shader.
      *
@@ -158,6 +164,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         return shader;
     }
+
 
 
     /**
@@ -196,6 +203,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         modelFloor = new float[16];
         headView = new float[16];
         mPerspective = new float[16];
+        headRotation = new float[4];
 
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -212,10 +220,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     public void onPause() {
         cardboardAudioEngine.pause();
         super.onPause();
-    }
-    @Override
-    public void onRendererShutdown() {
-        Log.i(TAG, "onRendererShutdown");
     }
     
     @Override
@@ -340,8 +344,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         GLES20.glEnableVertexAttribArray(floorColorParam);
 
         checkGLError("Floor program params");
-        CAMERA_X = (float) Math.random() * 80 - 40;
-        CAMERA_Z = (float) Math.random() * 80 - 40;
+        CAMERA_X = (float) Math.random() * 140 - 70;
+        CAMERA_Z = (float) Math.random() * 140 - 70;
         Z_info = CAMERA_Z;
 
         // Object first appears directly in front of user.
@@ -359,13 +363,23 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
                     // the cube position changes.
                     cardboardAudioEngine.preloadSoundFile(SOUND_FILE);
                     soundId = cardboardAudioEngine.createSoundObject(SOUND_FILE);
-                    cardboardAudioEngine.setSoundObjectPosition(
-                        soundId, modelPosition[0], modelPosition[1], modelPosition[2]);
-                    cardboardAudioEngine.playSound(soundId, true /* looped playback */);
+                    for (Map.Entry<String, DeviceInfo> e : DataControl.mDeviceInfos.entrySet()) {
+                        if (e.getValue().getName().equals("GOAL")) {
+                            Gmodel_x = Float.valueOf(e.getValue().getPoint().x);
+                            Gmodel_y = Float.valueOf(e.getValue().getPoint().y);
+                            Gmodel_z = Float.valueOf(e.getValue().getPoint().z);
+                            cardboardAudioEngine.setSoundObjectPosition(soundId, model_x, model_y, model_z);
+                            cardboardAudioEngine.playSound(soundId, true /* looped playback */);
+                        }
+                    }
                 }
             })
         .start();
-        
+            // Update the sound location to match it with the new cube position.
+        if (soundId != CardboardAudioEngine.INVALID_ID) {
+            cardboardAudioEngine.setSoundObjectPosition(
+                soundId, model_x, model_y, model_z);
+        }
         checkGLError("onSurfaceCreated");
     }
 
@@ -440,6 +454,11 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
             deviceInfo.setPoint(new Point(x, y, z));
         }
         headTransform.getHeadView(headView, 0);
+        
+        // Update the 3d audio engine with the most recent head rotation.
+        headTransform.getQuaternion(headRotation, 0);
+        cardboardAudioEngine.setHeadRotation(headRotation[0], headRotation[1], headRotation[2], headRotation[3]);
+        
         if(!mNetWorkMgr.getCheckInfo().getKeyIP().equals(null)) {
             runOnUiThread(new Runnable() {
                 public void run() {

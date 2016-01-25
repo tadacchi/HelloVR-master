@@ -20,6 +20,18 @@ public class Cube {
         this.Model_y = y;
         this.Model_z = z;
     }
+
+    public float getPoint_X(){
+        return Model_x;
+    }
+
+    public float getPoint_Y(){
+        return Model_y;
+    }
+
+    public float getPoint_Z(){
+        return Model_z;
+    }
     public float[] getDrawCube(){
         float[] modelCube = new float[16];
         Matrix.setIdentityM(modelCube,0);
